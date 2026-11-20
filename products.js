@@ -20,5 +20,9 @@ export function getPurchasedProduct(id) {
 }
 
 export function hasGamePurchase(db, userId) {
-  return Boolean(db.prepare("SELECT 1 FROM purchases WHERE user_id=? AND product_id=? LIMIT 1").get(userId, FULL_GAME_ID));
+  return Boolean(db.prepare(
+    "SELECT 1 FROM purchases p WHERE p.user_id=? AND p.product_id=? AND NOT EXISTS (" +
+    "SELECT 1 FROM game_payment_reversals r WHERE r.provider=p.provider AND r.payment_id=CASE p.provider " +
+    "WHEN 'stripe' THEN p.payment_intent_id WHEN 'paypal' THEN substr(p.id,8) END) LIMIT 1"
+  ).get(userId, FULL_GAME_ID));
 }

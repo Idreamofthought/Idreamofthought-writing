@@ -2,8 +2,9 @@ import crypto from "crypto";
 import paypal from "@paypal/checkout-server-sdk";
 import { createStripeClient } from "./stripe-client.js";
 import { db } from "./database2.js";
-import { FULL_GAME_ID, getProduct, getPurchasedProduct, hasGamePurchase } from "./products.js";
+import { FULL_GAME_ID, getProduct, getPurchasedProduct } from "./products.js";
 import { recordAuditEvent } from "./security.js";
+import { cancelGameCheckout, beginGameCheckout, claimPayPalCapture, finishGameCheckout, rememberGameCheckout, reverseGamePayment } from "./game-checkout.js";
 
 const PAYPAL_API_BASE = process.env.NODE_ENV === "production" ? "https://api-m.paypal.com" : "https://api-m.sandbox.paypal.com";
 const stripe = process.env.STRIPE_SECRET_KEY ? createStripeClient(process.env.STRIPE_SECRET_KEY) : null;
@@ -35,22 +36,25 @@ export async function createPayPalOrder({ userId, productId, withdrawalConsent, 
   if (withdrawalConsent !== true) throw new Error("withdrawal consent is required before checkout");
   const product = getProduct(productId);
   if (!product) throw new Error("invalid product");
-  if (hasGamePurchase(db, userId)) throw new Error("this account already owns Breluce");
+  const checkout = await beginGameCheckout(userId, "paypal", stripe);
+  if (checkout.checkout_url) return { id: checkout.provider_ref, url: checkout.checkout_url };
   const request = new paypal.orders.OrdersCreateRequest();
+  request.headers["PayPal-Request-Id"] = checkout.checkout_key;
   request.prefer("return=representation");
   request.requestBody({
     intent: "CAPTURE",
     purchase_units: [{ description: "Breluce — Full game", amount: { currency_code: product.currency, value: product.amount } }],
     application_context: {
       return_url: `${siteUrl}/purchase.html?provider=paypal&status=return`,
-      cancel_url: `${siteUrl}/purchase.html?provider=paypal&status=cancelled`
+      cancel_url: `${siteUrl}/purchase.html?provider=paypal&status=cancelled&checkout_key=${checkout.checkout_key}`
     }
   });
   const result = await getPayPalClient().execute(request);
   const orderId = result.result.id;
-  db.prepare(`INSERT INTO pending_orders (order_id,provider,user_id,product_id,minutes,amount,currency,withdrawal_consent,created_at) VALUES (?,?,?,?,?,?,?,?,?)`)
+  db.prepare(`INSERT OR IGNORE INTO pending_orders (order_id,provider,user_id,product_id,minutes,amount,currency,withdrawal_consent,created_at) VALUES (?,?,?,?,?,?,?,?,?)`)
     .run(orderId, "paypal", userId, product.id, product.minutes, product.amount, product.currency, 1, Date.now());
   const approval = result.result.links?.find(x => x.rel === "approve")?.href;
+  rememberGameCheckout(checkout, orderId, approval);
   return { id: orderId, url: approval };
 }
 
@@ -59,6 +63,10 @@ export async function capturePayPalOrder({ userId, orderId }, client = getPayPal
   if (!pending) throw new Error("unknown order");
   if (pending.consumed) return { ok: true, duplicate: true };
   const request = new paypal.orders.OrdersCaptureRequest(orderId);
+  if (pending.product_id === FULL_GAME_ID) {
+    claimPayPalCapture(userId, orderId);
+    request.headers["PayPal-Request-Id"] = crypto.createHash("sha256").update("breluce-capture:" + orderId).digest("hex").slice(0, 32);
+  }
   request.requestBody({});
   let result;
   try {
@@ -97,6 +105,10 @@ function creditPayPalCapture(pending, capture) {
 // Call only after PayPal has verified the webhook signature. Match captures to
 // our stored order; never accept a user, price or duration from the event.
 export function handlePayPalWebhookEvent(event) {
+  if (event?.event_type === "PAYMENT.CAPTURE.REVERSED") {
+    return reverseGamePayment("paypal", event.resource?.id, "capture reversed");
+  }
+  if (event?.event_type === "PAYMENT.CAPTURE.REFUNDED") return reconcilePayPalRefund(event.resource);
   if (event?.event_type !== "PAYMENT.CAPTURE.COMPLETED") return { ignored: true };
   const capture = event.resource;
   const orderId = capture?.supplementary_data?.related_ids?.order_id;
@@ -111,10 +123,14 @@ export async function createStripeCheckout({ userId, productId, withdrawalConsen
   if (!stripe) throw new Error("Stripe is not configured");
   const product = getProduct(productId);
   if (!product) throw new Error("invalid product");
-  if (hasGamePurchase(db, userId)) throw new Error("this account already owns Breluce");
+  const checkout = await beginGameCheckout(userId, "stripe", stripe);
+  if (checkout.checkout_url) return { url: checkout.checkout_url };
   const customerId = await getStripeCustomer(userId);
+  if (checkout.expires_at <= Date.now() + 30 * 60 * 1000) throw new Error("The previous checkout is still being reconciled.");
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
+    payment_method_types: ["card"],
+    expires_at: Math.floor(checkout.expires_at / 1000),
     managed_payments: { enabled: false },
     customer: customerId,
     line_items: [{ price_data: {
@@ -123,10 +139,15 @@ export async function createStripeCheckout({ userId, productId, withdrawalConsen
       unit_amount: Math.round(Number(product.amount) * 100)
     }, quantity: 1 }],
     success_url: `${siteUrl}/purchase.html?provider=stripe&status=success&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${siteUrl}/purchase.html?provider=stripe&status=cancelled`,
-    metadata: { userId: String(userId), productId: product.id, withdrawalConsent: "1", amount: product.amount, currency: product.currency }
-  });
+    cancel_url: `${siteUrl}/purchase.html?provider=stripe&status=cancelled&checkout_key=${checkout.checkout_key}`,
+    metadata: { userId: String(userId), productId: product.id, withdrawalConsent: "1", amount: product.amount, currency: product.currency, checkoutKey: checkout.checkout_key }
+  }, { idempotencyKey: checkout.checkout_key });
+  rememberGameCheckout(checkout, session.id, session.url, session.expires_at * 1000);
   return { url: session.url };
+}
+
+export async function cancelCheckout({ userId, checkoutKey }) {
+  return cancelGameCheckout(userId, checkoutKey, stripe);
 }
 
 export async function confirmStripeCheckout({ userId, sessionId }) {
@@ -142,6 +163,7 @@ export async function confirmStripeCheckout({ userId, sessionId }) {
   return creditPayment({
     pending: {
       order_id: session.id,
+      checkout_key: session.metadata?.checkoutKey,
       provider: "stripe",
       user_id: userId,
       product_id: product.id,
@@ -166,8 +188,18 @@ export async function confirmStripeCheckout({ userId, sessionId }) {
 export async function handleStripeWebhook(rawBody, signature) {
   if (!stripe || !process.env.STRIPE_WEBHOOK_SECRET) throw new Error("Stripe webhook is not configured");
   const event = stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET);
-  if (event.type !== "checkout.session.completed") return { ignored: true };
   const session = event.data.object;
+  if (event.type === "charge.refunded" && session.refunded === true && session.payment_intent) {
+    return reverseGamePayment("stripe", session.payment_intent, "full refund");
+  }
+  if (event.type === "charge.dispute.closed" && session.status === "lost" && session.payment_intent) {
+    return reverseGamePayment("stripe", session.payment_intent, "lost dispute");
+  }
+  if (event.type === "checkout.session.expired" && session.payment_status === "unpaid") {
+    if (session.metadata?.checkoutKey) finishGameCheckout(Number(session.metadata.userId), "stripe", session.id, session.metadata.checkoutKey);
+    return { expired: true };
+  }
+  if (!["checkout.session.completed", "checkout.session.async_payment_succeeded"].includes(event.type)) return { ignored: true };
   if (session.payment_status !== "paid") return { ignored: true };
   const userId = Number(session.metadata?.userId);
   const product = getPurchasedProduct(session.metadata?.productId);
@@ -177,6 +209,7 @@ export async function handleStripeWebhook(rawBody, signature) {
   return creditPayment({
     pending: {
       order_id: session.id,
+      checkout_key: session.metadata?.checkoutKey,
       provider: "stripe",
       user_id: userId,
       product_id: product.id,
@@ -214,7 +247,10 @@ export function creditPayment({ pending, eventId, capturedAmount, capturedCurren
     db.prepare(`INSERT INTO processed_payment_events (id,created_at) VALUES (?,?)`).run(eventId, Date.now());
     db.prepare(`INSERT INTO purchases (id,user_id,provider,product_id,minutes,amount,currency,customer_id,checkout_session_id,payment_intent_id,withdrawal_consent,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`)
       .run(eventId, pending.user_id, pending.provider, pending.product_id, pending.minutes, pending.amount, pending.currency, customerId || pending.customer_id || null, checkoutSessionId || pending.checkout_session_id || null, paymentIntentId || pending.payment_intent_id || null, pending.withdrawal_consent ? 1 : 0, Date.now());
-    if (pending.product_id === FULL_GAME_ID) return { credited: true };
+    if (pending.product_id === FULL_GAME_ID) {
+      finishGameCheckout(pending.user_id, pending.provider, pending.order_id, pending.checkout_key);
+      return { credited: true };
+    }
     const row = db.prepare(`SELECT remaining_seconds FROM time_tracking WHERE user_id=?`).get(pending.user_id);
     if (row) db.prepare(`UPDATE time_tracking SET remaining_seconds=remaining_seconds+?,updated_at=?,last_active_at=NULL WHERE user_id=?`).run(pending.minutes*60, Date.now(), pending.user_id);
     else db.prepare(`INSERT INTO time_tracking (user_id,remaining_seconds,last_active_at,updated_at) VALUES (?,?,NULL,?)`).run(pending.user_id, pending.minutes*60, Date.now());
@@ -236,15 +272,37 @@ export function creditPayment({ pending, eventId, capturedAmount, capturedCurren
   return result;
 }
 
+async function paypalAccessToken() {
+  const auth = Buffer.from(process.env.PAYPAL_CLIENT_ID + ":" + process.env.PAYPAL_CLIENT_SECRET).toString("base64");
+  const response = await fetch(PAYPAL_API_BASE + "/v1/oauth2/token", {
+    method: "POST", headers: { Authorization: "Basic " + auth, "Content-Type": "application/x-www-form-urlencoded" },
+    body: "grant_type=client_credentials"
+  });
+  if (!response.ok) throw new Error("PayPal token request failed");
+  return (await response.json()).access_token;
+}
+
+async function reconcilePayPalRefund(resource) {
+  const captureLink = resource?.links?.find(link => link.rel === "up" && typeof link.href === "string");
+  const captureId = resource?.supplementary_data?.related_ids?.capture_id ||
+    captureLink?.href.match(/\/v2\/payments\/captures\/([A-Za-z0-9-]+)(?:\?|$)/)?.[1];
+  if (typeof captureId !== "string" || !/^[A-Za-z0-9-]+$/.test(captureId)) throw new Error("PayPal refund is missing its capture reference");
+  const token = await paypalAccessToken();
+  const response = await fetch(PAYPAL_API_BASE + "/v2/payments/captures/" + captureId, {
+    headers: { Authorization: "Bearer " + token }
+  });
+  if (!response.ok) throw new Error("PayPal capture lookup failed");
+  const capture = await response.json();
+  if (capture.id !== captureId) throw new Error("PayPal capture reference mismatch");
+  return capture.status === "REFUNDED" ? reverseGamePayment("paypal", captureId, "full refund") : { ignored: true };
+}
+
 export async function verifyPayPalWebhookSignature(headers, body) {
   if (!process.env.PAYPAL_WEBHOOK_ID || typeof body !== "string" || !body) return false;
   // Embed the original JSON without changing whitespace, escapes or numbers.
   // It has already passed Express's JSON parser; never interpolate arbitrary text.
   JSON.parse(body);
-  const auth = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString("base64");
-  const tokenResp = await fetch(`${PAYPAL_API_BASE}/v1/oauth2/token`, { method:"POST", headers:{ Authorization:`Basic ${auth}`, "Content-Type":"application/x-www-form-urlencoded" }, body:"grant_type=client_credentials" });
-  if (!tokenResp.ok) return false;
-  const { access_token } = await tokenResp.json();
+  const access_token = await paypalAccessToken();
   const resp = await fetch(`${PAYPAL_API_BASE}/v1/notifications/verify-webhook-signature`, {
     method:"POST", headers:{ Authorization:`Bearer ${access_token}`, "Content-Type":"application/json" },
     body: JSON.stringify({

@@ -67,6 +67,7 @@ import {
   capturePayPalOrder,
   createStripeCheckout,
   confirmStripeCheckout,
+  cancelCheckout,
   handleStripeWebhook,
   verifyPayPalWebhookSignature,
   handlePayPalWebhookEvent
@@ -972,11 +973,21 @@ app.post(
     } catch (err) {
       console.error("paypal create order failed", err);
       res.status(400).json({
-        error: err.message === "invalid product" ? err.message : "paypal error"
+        error: /^(invalid product|this account already owns|A checkout is already active|PayPal payment is being confirmed|The previous checkout)/.test(err.message) ? err.message : "paypal error"
       });
     }
   }
 );
+
+app.post("/api/checkout/cancel", checkoutLimiter, requireCsrf, authenticateRequest, requireVerified, async (req, res) => {
+  try {
+    await cancelCheckout({ userId: req.user.uid, checkoutKey: req.body?.checkoutKey });
+    res.json({ ok: true });
+  } catch (error) {
+    console.error("checkout cancellation failed", error);
+    res.status(409).json({ error: "The previous payment is still being reconciled." });
+  }
+});
 
 // PayPal capture
 app.post(
@@ -1059,7 +1070,7 @@ app.post(
 
       // Complete durable credit inside this try/catch before acknowledging.
       // A 500 lets PayPal retry; no exception escapes into an unguarded timer.
-      const result = handlePayPalWebhookEvent(req.body);
+      const result = await handlePayPalWebhookEvent(req.body);
       res.status(200).json({ received: true, ...result });
     } catch (err) {
       console.error("PayPal webhook error:", err.message);

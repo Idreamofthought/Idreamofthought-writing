@@ -73,6 +73,25 @@ CREATE TABLE IF NOT EXISTS purchases (
   FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
+
+CREATE TABLE IF NOT EXISTS game_checkouts (
+  user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  provider TEXT NOT NULL,
+  checkout_key TEXT NOT NULL UNIQUE,
+  provider_ref TEXT,
+  checkout_url TEXT,
+  expires_at INTEGER,
+  capturing INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS game_payment_reversals (
+  provider TEXT NOT NULL,
+  payment_id TEXT NOT NULL,
+  reason TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  PRIMARY KEY (provider, payment_id)
+);
+
 CREATE TABLE IF NOT EXISTS time_tracking (
   user_id INTEGER PRIMARY KEY,
   remaining_seconds INTEGER NOT NULL DEFAULT 0,
