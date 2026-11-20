@@ -1,7 +1,7 @@
 # Obsidian Chisel
 
 The edge of this chisel is sharper than its broken handle deserves. It leaves
-a dark, glassy cut in clay and stone, but the builders of Portus used it for
+a dark, glassy cut in clay and stone, but the builders of Breluce used it for
 more than shaping walls. Tiny notches along the grip record the order in which
 each foundation was laid.
 

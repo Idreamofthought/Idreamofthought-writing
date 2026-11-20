@@ -1,3 +1,3 @@
 # Worldbuilding
 
-Shared reference material for Portus and the public writing project.
+Shared reference material for Breluce and the public writing project.

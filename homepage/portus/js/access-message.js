@@ -6,12 +6,12 @@ const params = new URLSearchParams(window.location.search);
 if (params.get("paid") === "required" || params.get("verify") === "required") {
   accessMessage.hidden = false;
   accessMessage.textContent = params.get("verify") === "required"
-    ? "Verify your email address before entering Portus."
-    : "Choose a pass to enter the playable build of Portus.";
+    ? "Verify your email address before entering Breluce."
+    : "Unlock Breluce online with a one-time purchase of US$4.99.";
   if (params.get("paid") === "required") {
     document.querySelectorAll('a[href="/game"]').forEach((link) => {
       link.href = "/purchase.html";
-      if (link.classList.contains("primary-cta")) link.innerHTML = "Get access to Portus <span>↗</span>";
+      if (link.classList.contains("primary-cta")) link.innerHTML = "Get access to Breluce <span>↗</span>";
       else if (link.classList.contains("nav-play")) link.textContent = "Get access";
     });
   }

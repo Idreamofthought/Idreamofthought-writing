@@ -20,7 +20,7 @@ export function normalizeSenderAddress(value) {
 export const configuredSender = normalizeSenderAddress(sender);
 
 export const emailConfigError = !apiKey || !configuredSender
-  ? "Email delivery is not configured. Set RESEND_API_KEY and EMAIL_FROM to a verified sender address before enabling signup or password resets. Example: Portus <no-reply@idreamofthought.org>"
+  ? "Email delivery is not configured. Set RESEND_API_KEY and EMAIL_FROM to a verified sender address before enabling signup or password resets. Example: Breluce <no-reply@idreamofthought.org>"
   : null;
 
 const unavailableResend = {

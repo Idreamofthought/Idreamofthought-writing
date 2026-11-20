@@ -1,6 +1,6 @@
 # The Seven Artifact Categories
 
-This document is the canonical lore and design reference for the seven Portus
+This document is the canonical lore and design reference for the seven Breluce
 artifact categories. The category effects below describe intended gameplay
 direction; the currently implemented discovery behavior is documented in
 [`portus/items/artifact_discovery.md`](../portus/items/artifact_discovery.md).

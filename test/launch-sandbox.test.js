@@ -5,7 +5,7 @@ const enabled = process.env.RUN_LAUNCH_SANDBOX === "1";
 const baseUrl = (process.env.LAUNCH_TEST_BASE_URL || "http://localhost:8080").replace(/\/$/, "");
 const email = process.env.LAUNCH_TEST_EMAIL;
 const password = process.env.LAUNCH_TEST_PASSWORD;
-const productId = process.env.LAUNCH_TEST_PRODUCT_ID || "hour";
+const productId = process.env.LAUNCH_TEST_PRODUCT_ID || "full_game";
 const cookies = new Map();
 
 function updateCookies(response) {
@@ -68,11 +68,11 @@ test("sandbox launch smoke test", { skip: !enabled && "Set RUN_LAUNCH_SANDBOX=1 
     const login = await request("/api/login", { method: "POST", body: { email, password }, csrfToken: csrf.data.csrfToken });
     assert.equal(login.response.status, 200, JSON.stringify(login.data));
 
-    const stripe = await request("/api/checkout/stripe", { method: "POST", body: { productId }, csrfToken: csrf.data.csrfToken });
+    const stripe = await request("/api/checkout/stripe", { method: "POST", body: { productId, withdrawalConsent: true }, csrfToken: csrf.data.csrfToken });
     assert.equal(stripe.response.status, 200, JSON.stringify(stripe.data));
     assert.match(stripe.data.url, /^https:\/\//);
 
-    const paypal = await request("/api/checkout/paypal", { method: "POST", body: { productId }, csrfToken: csrf.data.csrfToken });
+    const paypal = await request("/api/checkout/paypal", { method: "POST", body: { productId, withdrawalConsent: true }, csrfToken: csrf.data.csrfToken });
     assert.equal(paypal.response.status, 200, JSON.stringify(paypal.data));
     assert.match(paypal.data.url, /^https:\/\//);
   });

@@ -1,10 +1,10 @@
 # Lore Index
 
-This is the navigation point for Portus worldbuilding. The source material remains
+This is the navigation point for Breluce worldbuilding. The source material remains
 in its existing domain folders so the game content and narrative books keep their
 stable paths.
 
-## Portus canon
+## Breluce canon
 
 - [Narrative lore books](../portus/lore/book1_lie_of_the_land.md): the ordered story and world books.
 - [Codex entries](../portus/codex/artifacts/README.md): unlockable knowledge grouped by subject.
@@ -29,4 +29,4 @@ an API endpoint.
 The public creative writing source is indexed separately in [site/README.md](../site/README.md) and
 served from the existing [homepage writing index](../homepage/writing/index.html) and
 [public writing index](../public/writing/index.html) surfaces. It is related
-to Portus thematically but is not part of the game's unlockable Codex canon.
+to Breluce thematically but is not part of the game's unlockable Codex canon.

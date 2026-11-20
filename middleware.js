@@ -4,6 +4,7 @@ import { db } from "./database2.js";
 import { ROUTES } from "./routes-config.js";
 import { secureCookies } from "./runtime-security.js";
 import { createPlayAccess } from "./play-access.js";
+import { hasGamePurchase } from "./products.js";
 
 export const playAccess = createPlayAccess(db);
 
@@ -45,12 +46,12 @@ export function requireVerified(req, res, next) {
 }
 
 export function requirePaid(req, res, next) {
-  if (hasFreeAccess(req.user.uid)) return next();
+  if (hasFreeAccess(req.user.uid) || hasGamePurchase(db, req.user.uid)) return next();
 
   const access = playAccess.grant(req.user.uid);
   if (access.playWindowMs <= 0) {
     if (wantsHTML(req)) return res.redirect(`${ROUTES.portus}?paid=required`);
-    return res.status(403).json({ error: "no paid time" });
+    return res.status(403).json({ error: "purchase required" });
   }
   next();
 }

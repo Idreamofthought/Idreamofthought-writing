@@ -72,6 +72,24 @@ maybe("Stripe webhook \u2014 signed test events (no real Stripe checkout needed)
     expect(replayRes.body.duplicate).toBe(true);
   });
 
+  test("a full-game purchase unlocks the account without consuming previous play time", async () => {
+    const userId = await createVerifiedUser(cleanupEmails);
+    db.prepare("INSERT INTO time_tracking (user_id,remaining_seconds,updated_at) VALUES (?,75,0) ON CONFLICT(user_id) DO UPDATE SET remaining_seconds=75").run(userId);
+    const user = db.prepare("SELECT email FROM users WHERE id=?").get(userId);
+    const session = new Session(BASE_URL);
+    await session.postCsrf("/api/login", { email: user.email, password: TEST_PASSWORD });
+    const event = checkoutSessionEvent({ id: "cs_test_full_" + userId + "_" + Date.now(), userId, productId: "full_game", amountTotal: 499 });
+    const { payload, signatureHeader } = signStripePayload(event, secret);
+    expect((await postWebhook(payload, signatureHeader)).body.credited).toBe(true);
+    expect((await postWebhook(payload, signatureHeader)).body.duplicate).toBe(true);
+    expect((await session.request("GET", "/api/access")).body).toMatchObject({ ownsGame: true, canPlay: true, remainingSeconds: null, accessExpiresAt: null });
+    expect((await session.request("GET", "/game")).status).toBe(200);
+    expect((await session.postCsrf("/api/access/heartbeat", {})).body.ownsGame).toBe(true);
+    expect(db.prepare("SELECT remaining_seconds FROM time_tracking WHERE user_id=?").get(userId).remaining_seconds).toBe(75);
+    const checkout = await session.postCsrf("/api/checkout/stripe", { productId: "full_game", withdrawalConsent: true });
+    expect(checkout.body.error).toMatch(/already owns/);
+  });
+
   test("wrong currency in webhook payload is rejected", async () => {
     const userId = await createVerifiedUser(cleanupEmails);
     const event = checkoutSessionEvent({ id: `cs_test_${Date.now()}_cur`, userId, currency: "eur" });

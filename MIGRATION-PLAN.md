@@ -48,4 +48,4 @@ step keeps the two in sync automatically.
 - Check every branch and leaf link after content changes.
 - Verify mobile layout at a narrow viewport.
 - Run `git diff --check` before publishing.
-- Confirm that payment links remain separate from authenticated Portus time purchases.
+- Confirm that payment links remain separate from authenticated Breluce time purchases.

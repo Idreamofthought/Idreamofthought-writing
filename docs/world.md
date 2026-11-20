@@ -1,7 +1,7 @@
 # World
 
 ## Overview
-Portus is a suspended settlement drifting between dream, history, and memory. The world is shaped by movement, scarcity, and mythic atmosphere rather than only industrial expansion.
+Breluce is a suspended settlement drifting between dream, history, and memory. The world is shaped by movement, scarcity, and mythic atmosphere rather than only industrial expansion.
 
 ## Core setting ideas
 - The city exists in a liminal spatial state, not fully fixed to any one geography
@@ -20,7 +20,7 @@ The city’s relationship with forests, soil, water, and weather is central to s
 Work is not separate from belief. The culture builds meaning into resource gathering, place-making, and civic ritual.
 
 ### Drift and instability
-The world is not static. Portus shifts, changes, and responds to the emotional and environmental state of its inhabitants.
+The world is not static. Breluce shifts, changes, and responds to the emotional and environmental state of its inhabitants.
 
 ## Geography
 The world may include:

@@ -56,7 +56,7 @@ import {
   requireAdmin
 } from "./security.js";
 
-import { PRODUCTS } from "./products.js";
+import { PRODUCTS, hasGamePurchase } from "./products.js";
 import {
   sendVerificationEmail,
   sendPasswordResetEmail
@@ -361,7 +361,7 @@ app.get("/tree/leaves/:branch/", generalApiLimiter, (req, res, next) => {
 <meta name="description" content="${displayCount} leaves growing on the ${escapeHtml(branchTitle)} branch of I Dream of Thought.">
 <link rel="canonical" href="${SITE_URL}/tree/leaves/${encodeURIComponent(req.params.branch)}/">
 <link rel="stylesheet" href="/tree/css/tree.css"></head><body>
-<nav class="idot-topnav" aria-label="Site navigation"><a class="idot-brand" href="/">I Dream of Thought</a><a href="/tree/">Tree</a><a href="/writing/index.html">Catalogue</a><a href="/what-is">About</a><a href="/contact">Contact</a><a class="idot-play" href="/game">Play Portus</a></nav>
+<nav class="idot-topnav" aria-label="Site navigation"><a class="idot-brand" href="/">I Dream of Thought</a><a href="/tree/">Tree</a><a href="/writing/index.html">Catalogue</a><a href="/what-is">About</a><a href="/contact">Contact</a><a class="idot-play" href="/game">Play Breluce</a></nav>
 <main class="tree-page"><a class="site-link" href="/tree/branches/${encodeURIComponent(req.params.branch)}.html">← ${escapeHtml(branchTitle)} branch</a>
 <header class="tree-header"><p class="eyebrow">${displayCount} leaves</p><h1>${escapeHtml(branchTitle)}</h1><p class="intro">Individual works growing on this branch of the Great Tree.</p></header>
 <section class="leaf-tools" aria-label="Find a leaf"><label for="leaf-search">Search this branch</label><input id="leaf-search" type="search" placeholder="Type a title or word"><label for="leaf-sort">Sort</label><select id="leaf-sort"><option value="az">A–Z</option><option value="za">Z–A</option></select><output id="leaf-count">${displayCount} leaves</output></section>
@@ -810,13 +810,10 @@ app.post("/api/delete-account", requireCsrf, authenticateRequest, generalApiLimi
 
 // Access time
 app.get("/api/access", authenticateRequest, (req, res) => {
-  if (hasFreeAccess(req.user.uid)) {
-    return res.json({
-      remainingSeconds: null,
-      canPlay: true,
-      freeAccess: true,
-      accessExpiresAt: null
-    });
+  const freeAccess = hasFreeAccess(req.user.uid);
+  const ownsGame = hasGamePurchase(db, req.user.uid);
+  if (freeAccess || ownsGame) {
+    return res.json({ remainingSeconds: null, canPlay: true, freeAccess, ownsGame, accessExpiresAt: null });
   }
 
   res.json(playAccess.read(req.user.uid));
@@ -824,13 +821,10 @@ app.get("/api/access", authenticateRequest, (req, res) => {
 
 // Heartbeat
 app.post("/api/access/heartbeat", requireCsrf, authenticateRequest, generalApiLimiter, (req, res) => {
-  if (hasFreeAccess(req.user.uid)) {
-    return res.json({
-      remainingSeconds: null,
-      canPlay: true,
-      freeAccess: true,
-      accessExpiresAt: null
-    });
+  const freeAccess = hasFreeAccess(req.user.uid);
+  const ownsGame = hasGamePurchase(db, req.user.uid);
+  if (freeAccess || ownsGame) {
+    return res.json({ remainingSeconds: null, canPlay: true, freeAccess, ownsGame, accessExpiresAt: null });
   }
 
   res.json(playAccess.grant(req.user.uid, { renew: true }));
@@ -838,7 +832,7 @@ app.post("/api/access/heartbeat", requireCsrf, authenticateRequest, generalApiLi
 
 // Stop access
 app.post("/api/access/stop", requireCsrf, authenticateRequest, generalApiLimiter, (req, res) => {
-  playAccess.stop(req.user.uid);
+  if (!hasGamePurchase(db, req.user.uid)) playAccess.stop(req.user.uid);
   res.json({ ok: true });
 });
 

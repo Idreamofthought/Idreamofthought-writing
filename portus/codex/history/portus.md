@@ -1,6 +1,6 @@
-# History of Portus
+# History of Breluce
 
-Portus was not founded in a single morning. It gathered itself around a river
+Breluce was not founded in a single morning. It gathered itself around a river
 crossing, a line of old stones, and the first people willing to repair what the
 water had carried away.
 

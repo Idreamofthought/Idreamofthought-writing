@@ -1,6 +1,6 @@
-# Portus UI Guide
+# Breluce UI Guide
 
-Portus should feel like a quiet interface discovered inside a dream. The UI supports repeated city-building actions without becoming loud, dense, or mechanical.
+Breluce should feel like a quiet interface discovered inside a dream. The UI supports repeated city-building actions without becoming loud, dense, or mechanical.
 
 ## Visual Direction
 
@@ -26,7 +26,7 @@ Avoid:
 
 The game HUD has five primary zones:
 
-- Top bar: Portus identity, time, resources, and audio controls
+- Top bar: Breluce identity, time, resources, and audio controls
 - Center stage: the 1200x792 logical canvas and map
 - Left panel: Codex and remembered world knowledge
 - Right panel: live warnings and risks

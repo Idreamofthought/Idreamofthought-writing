@@ -1,11 +1,11 @@
 ---
-title: Spirit Atlas of Portus
+title: Spirit Atlas of Breluce
 category: spirits
 related_items: ../../items/artifact_discovery.md
 related_events: ../../events/spirit_encounters.md
 ---
 
-# Spirit Atlas of Portus
+# Spirit Atlas of Breluce
 
 Every terrain holds a presence. Spirits are not enemies to defeat; they answer
 care, disturbance, repetition, and the choices made around their home.

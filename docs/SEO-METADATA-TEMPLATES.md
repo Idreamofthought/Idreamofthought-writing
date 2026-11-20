@@ -28,24 +28,24 @@ Replace bracketed values before publishing. Keep one canonical URL per public pa
 </script>
 ```
 
-## Portus gameplay guide
+## Breluce gameplay guide
 
 ```html
-<title>[Guide title] - Portus</title>
-<meta name="description" content="[Clear description of the Portus system or gameplay topic].">
+<title>[Guide title] - Breluce</title>
+<meta name="description" content="[Clear description of the Breluce system or gameplay topic].">
 <link rel="canonical" href="https://www.idreamofthought.org/[path]">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Article","headline":"[Guide title]","about":{"@type":"VideoGame","name":"Portus"},"author":{"@type":"Person","name":"Richard Jenkins"},"mainEntityOfPage":"https://www.idreamofthought.org/[path]"}
+{"@context":"https://schema.org","@type":"Article","headline":"[Guide title]","about":{"@type":"VideoGame","name":"Breluce"},"author":{"@type":"Person","name":"Richard Jenkins"},"mainEntityOfPage":"https://www.idreamofthought.org/[path]"}
 </script>
 ```
 
-## Portus Codex entry or volume
+## Breluce Codex entry or volume
 
 ```html
-<title>Portus Codex [Volume or Entry] - [Subtitle]</title>
+<title>Breluce Codex [Volume or Entry] - [Subtitle]</title>
 <meta name="description" content="[Concise description of the lore topic].">
 <link rel="canonical" href="https://www.idreamofthought.org/[path]">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Book","name":"Portus Codex [Volume or Entry] - [Subtitle]","url":"https://www.idreamofthought.org/[path]","isPartOf":{"@type":"CreativeWorkSeries","name":"Portus Codex"}}
+{"@context":"https://schema.org","@type":"Book","name":"Breluce Codex [Volume or Entry] - [Subtitle]","url":"https://www.idreamofthought.org/[path]","isPartOf":{"@type":"CreativeWorkSeries","name":"Breluce Codex"}}
 </script>
 ```

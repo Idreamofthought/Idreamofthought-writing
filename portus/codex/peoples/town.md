@@ -1,6 +1,6 @@
 # People of the Town
 
-The people of Portus are not one tribe. The River People bring patience with
+The people of Breluce are not one tribe. The River People bring patience with
 water, the Beast-Clan brings respect for living places, the First Builders
 bring measured hands, and the Sky-Readers bring warnings from above.
 

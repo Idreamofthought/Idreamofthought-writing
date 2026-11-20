@@ -1,3 +1,3 @@
 # Events
 
-Encounter and disaster-relic rules for Portus.
+Encounter and disaster-relic rules for Breluce.

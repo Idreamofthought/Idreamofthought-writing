@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="https://github.com/Idreamofthought/portus-server"
+REPO_URL="https://github.com/Idreamofthought/Idreamofthought-writing"
 WORK_DIR="$(pwd)"
-APP_DIR="$WORK_DIR/portus-server"
+APP_DIR="$WORK_DIR/Idreamofthought-writing"
 
 echo
-echo "=== Portus Server Setup ==="
+echo "=== Breluce Server Setup ==="
 echo "Repository: $REPO_URL"
 echo "Working directory: $WORK_DIR"
 echo
@@ -61,5 +61,5 @@ fi
 
 echo
 echo "=== Setup Complete ==="
-echo "Portus should now be running at $URL"
+echo "Breluce should now be running at $URL"
 echo "Edit .env with your real credentials before production deployment."

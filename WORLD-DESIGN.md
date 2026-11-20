@@ -1,6 +1,6 @@
-# Portus World Design
+# Breluce World Design
 
-Portus is a settlement remembered into existence. It is not a conventional conquest game: the player's work is to give shape to a place that is incomplete, fragile, and quietly alive.
+Breluce is a settlement remembered into existence. It is not a conventional conquest game: the player's work is to give shape to a place that is incomplete, fragile, and quietly alive.
 
 ## Design Pillars
 

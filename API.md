@@ -1,4 +1,4 @@
-# Portus API
+# Breluce API
 
 The API is same-origin and served by `server.js`. JSON endpoints use cookie-based authentication. Mutating requests require a CSRF token unless noted otherwise.
 
@@ -114,11 +114,11 @@ Body:
 
 ### `GET /api/access`
 
-Returns remaining paid play time and whether the account can play.
+Returns whether the account can play. Accounts with a full-game purchase receive `ownsGame: true` and have no time limit. Existing play-time credits remain available.
 
 ### `POST /api/access/heartbeat`
 
-Keeps an active game session alive and consumes server-authoritative play time.
+Keeps an active game session alive. It consumes time only for players still using previous play-time credits.
 
 Time is prepaid in windows of at most 10 seconds, shared by all tabs for the account.
 `remainingSeconds` includes the unused part of the current window and unreserved balance.
@@ -149,7 +149,7 @@ Returns the latest saved game state for the authenticated player.
 
 ## Payment Routes
 
-Payment routes use the configured Stripe and PayPal credentials. Checkout requires a verified, authenticated account and CSRF protection.
+Payment routes use the configured Stripe and PayPal credentials. New orders use `full_game`, a one-time US$4.99 account unlock. Existing hourly orders can still settle at their original price. Checkout requires a verified, authenticated account and CSRF protection.
 
 ### `POST /api/checkout/paypal`
 

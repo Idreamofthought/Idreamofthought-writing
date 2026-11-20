@@ -22,9 +22,9 @@ async function sendEmail(options) {
 export async function sendVerificationEmail({ email, token }) {
   const url = `${process.env.SITE_URL || "https://www.idreamofthought.org"}/verify-email?token=${encodeURIComponent(token)}`;
   return sendEmail({
-    from: `Portus <${configuredSender}>`,
+    from: `Breluce <${configuredSender}>`,
     to: email,
-    subject: "Verify your Portus account",
+    subject: "Verify your Breluce account",
     html: `<p>Click to verify your email:</p><p><a href="${url}">${url}</a></p>`
   });
 }
@@ -32,9 +32,9 @@ export async function sendVerificationEmail({ email, token }) {
 export async function sendPasswordResetEmail({ email, token }) {
   const url = `${process.env.SITE_URL || "https://www.idreamofthought.org"}/reset-password.html?token=${encodeURIComponent(token)}`;
   return sendEmail({
-    from: `Portus <${configuredSender}>`,
+    from: `Breluce <${configuredSender}>`,
     to: email,
-    subject: "Reset your Portus password",
+    subject: "Reset your Breluce password",
     html: `<p>Click to reset your password:</p><p><a href="${url}">${url}</a></p>`
   });
 }
