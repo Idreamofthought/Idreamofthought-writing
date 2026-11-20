@@ -2,7 +2,7 @@ import crypto from "crypto";
 import paypal from "@paypal/checkout-server-sdk";
 import { createStripeClient } from "./stripe-client.js";
 import { db } from "./database2.js";
-import { PRODUCTS, getProduct } from "./products.js";
+import { FULL_GAME_ID, getProduct, getPurchasedProduct, hasGamePurchase } from "./products.js";
 import { recordAuditEvent } from "./security.js";
 
 const PAYPAL_API_BASE = process.env.NODE_ENV === "production" ? "https://api-m.paypal.com" : "https://api-m.sandbox.paypal.com";
@@ -35,11 +35,12 @@ export async function createPayPalOrder({ userId, productId, withdrawalConsent, 
   if (withdrawalConsent !== true) throw new Error("withdrawal consent is required before checkout");
   const product = getProduct(productId);
   if (!product) throw new Error("invalid product");
+  if (hasGamePurchase(db, userId)) throw new Error("this account already owns Breluce");
   const request = new paypal.orders.OrdersCreateRequest();
   request.prefer("return=representation");
   request.requestBody({
     intent: "CAPTURE",
-    purchase_units: [{ amount: { currency_code: product.currency, value: product.amount } }],
+    purchase_units: [{ description: "Breluce — Full game", amount: { currency_code: product.currency, value: product.amount } }],
     application_context: {
       return_url: `${siteUrl}/purchase.html?provider=paypal&status=return`,
       cancel_url: `${siteUrl}/purchase.html?provider=paypal&status=cancelled`
@@ -110,6 +111,7 @@ export async function createStripeCheckout({ userId, productId, withdrawalConsen
   if (!stripe) throw new Error("Stripe is not configured");
   const product = getProduct(productId);
   if (!product) throw new Error("invalid product");
+  if (hasGamePurchase(db, userId)) throw new Error("this account already owns Breluce");
   const customerId = await getStripeCustomer(userId);
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
@@ -133,10 +135,10 @@ export async function confirmStripeCheckout({ userId, sessionId }) {
   const session = await stripe.checkout.sessions.retrieve(sessionId);
   if (session.payment_status !== "paid") throw new Error("payment is not complete");
   const sessionUserId = Number(session.metadata?.userId);
-  const product = getProduct(session.metadata?.productId);
+  const product = getPurchasedProduct(session.metadata?.productId);
   if (sessionUserId !== userId || !product) throw new Error("invalid Stripe metadata");
-  const originalCurrency = session.metadata?.currency || "USD"; // Existing sessions predate the EUR switch.
-  const originalAmount = session.metadata?.amount || product.amount;
+  const originalCurrency = product.id === FULL_GAME_ID ? product.currency : session.metadata?.currency || "USD";
+  const originalAmount = product.id === FULL_GAME_ID ? product.amount : session.metadata?.amount || product.amount;
   return creditPayment({
     pending: {
       order_id: session.id,
@@ -168,10 +170,10 @@ export async function handleStripeWebhook(rawBody, signature) {
   const session = event.data.object;
   if (session.payment_status !== "paid") return { ignored: true };
   const userId = Number(session.metadata?.userId);
-  const product = getProduct(session.metadata?.productId);
+  const product = getPurchasedProduct(session.metadata?.productId);
   if (!userId || !product) throw new Error("invalid Stripe metadata");
-  const originalCurrency = session.metadata?.currency || "USD";
-  const originalAmount = session.metadata?.amount || product.amount;
+  const originalCurrency = product.id === FULL_GAME_ID ? product.currency : session.metadata?.currency || "USD";
+  const originalAmount = product.id === FULL_GAME_ID ? product.amount : session.metadata?.amount || product.amount;
   return creditPayment({
     pending: {
       order_id: session.id,
@@ -202,24 +204,24 @@ export function creditPayment({ pending, eventId, capturedAmount, capturedCurren
   const expectedCurrency = String(pending.currency || "").trim().toUpperCase();
   const actualCurrency = String(capturedCurrency || "").trim().toUpperCase();
   if (!expectedCurrency || actualCurrency !== expectedCurrency) throw new Error("payment currency mismatch");
-  const existing = db.prepare(`SELECT id FROM processed_payment_events WHERE id=?`).get(eventId);
-  if (existing) return { credited: false, duplicate: true };
-  let credited = false;
   const tx = db.transaction(() => {
+    const existing = db.prepare("SELECT 1 FROM processed_payment_events WHERE id=?").get(eventId);
+    if (existing) return { credited: false, duplicate: true };
     const claim = pending.provider === "paypal"
       ? db.prepare(`UPDATE pending_orders SET consumed=1 WHERE order_id=? AND consumed=0`).run(pending.order_id)
       : { changes: 1 };
-    if (pending.provider === "paypal" && claim.changes === 0) return;
+    if (pending.provider === "paypal" && claim.changes === 0) return { credited: false, duplicate: true };
     db.prepare(`INSERT INTO processed_payment_events (id,created_at) VALUES (?,?)`).run(eventId, Date.now());
     db.prepare(`INSERT INTO purchases (id,user_id,provider,product_id,minutes,amount,currency,customer_id,checkout_session_id,payment_intent_id,withdrawal_consent,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`)
       .run(eventId, pending.user_id, pending.provider, pending.product_id, pending.minutes, pending.amount, pending.currency, customerId || pending.customer_id || null, checkoutSessionId || pending.checkout_session_id || null, paymentIntentId || pending.payment_intent_id || null, pending.withdrawal_consent ? 1 : 0, Date.now());
+    if (pending.product_id === FULL_GAME_ID) return { credited: true };
     const row = db.prepare(`SELECT remaining_seconds FROM time_tracking WHERE user_id=?`).get(pending.user_id);
     if (row) db.prepare(`UPDATE time_tracking SET remaining_seconds=remaining_seconds+?,updated_at=?,last_active_at=NULL WHERE user_id=?`).run(pending.minutes*60, Date.now(), pending.user_id);
     else db.prepare(`INSERT INTO time_tracking (user_id,remaining_seconds,last_active_at,updated_at) VALUES (?,?,NULL,?)`).run(pending.user_id, pending.minutes*60, Date.now());
-    credited = true;
+    return { credited: true };
   });
-  tx();
-  if (credited) {
+  const result = tx.immediate();
+  if (result.credited) {
     recordAuditEvent({
       userId: pending.user_id,
       eventType: "payment_credited",
@@ -231,7 +233,7 @@ export function creditPayment({ pending, eventId, capturedAmount, capturedCurren
       }
     });
   }
-  return { credited };
+  return result;
 }
 
 export async function verifyPayPalWebhookSignature(headers, body) {

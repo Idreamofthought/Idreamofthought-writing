@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { getProduct, hasGamePurchase } from '../products.js';
 import { IncomingMessage, ServerResponse } from 'node:http';
 import { Duplex } from 'node:stream';
 
@@ -10,12 +11,12 @@ const { db } = await import('../database2.js');
 const { capturePayPalOrder, handlePayPalWebhookEvent } = await import('../payments.js');
 
 let number = 0;
-function order() {
+function order(product = { id: 'hour', minutes: 60, amount: '2.00', currency: 'EUR' }) {
   const id = Number(db.prepare('INSERT INTO users (email,password_hash,email_verified,created_at) VALUES (?,?,1,?)')
     .run(`paypal-${++number}@example.test`, 'unused', Date.now()).lastInsertRowid);
   const orderId = `ORDER${number}`;
-  db.prepare("INSERT INTO pending_orders (order_id,provider,user_id,product_id,minutes,amount,currency,created_at) VALUES (?,'paypal',?,'hour',60,'2.00','EUR',?)").run(orderId, id, Date.now());
-  return { id, orderId, event: { event_type: 'PAYMENT.CAPTURE.COMPLETED', resource: { id: `CAPTURE${number}`, status: 'COMPLETED', amount: { value: '2.00', currency_code: 'EUR' }, supplementary_data: { related_ids: { order_id: orderId } } } } };
+  db.prepare("INSERT INTO pending_orders (order_id,provider,user_id,product_id,minutes,amount,currency,created_at) VALUES (?,'paypal',?,?,?,?,?,?)").run(orderId, id, product.id, product.minutes, product.amount, product.currency, Date.now());
+  return { id, orderId, event: { event_type: 'PAYMENT.CAPTURE.COMPLETED', resource: { id: `CAPTURE${number}`, status: 'COMPLETED', amount: { value: product.amount, currency_code: product.currency }, supplementary_data: { related_ids: { order_id: orderId } } } } };
 }
 function request(url, body) {
   return new Promise((resolve, reject) => {
@@ -113,4 +114,14 @@ test('already captured orders can be reconciled without charging again; webhook 
   assert.equal((await capturePayPalOrder({ userId: f.id, orderId: f.orderId }, client)).duplicate, true);
   assert.equal(calls, 2);
   assert.equal(db.prepare('SELECT COUNT(*) AS n FROM purchases WHERE user_id=?').get(f.id).n, 1);
+});
+
+test("a completed full-game PayPal capture grants ownership exactly once", () => {
+  const product = getProduct("full_game");
+  const f = order(product);
+  assert.equal(hasGamePurchase(db, f.id), false);
+  assert.equal(handlePayPalWebhookEvent(f.event).credited, true);
+  assert.equal(handlePayPalWebhookEvent(f.event).duplicate, true);
+  assert.equal(hasGamePurchase(db, f.id), true);
+  assert.deepEqual(db.prepare("SELECT amount,currency,minutes FROM purchases WHERE user_id=?").get(f.id), { amount: "4.99", currency: "USD", minutes: 0 });
 });

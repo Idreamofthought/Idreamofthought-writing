@@ -7,7 +7,7 @@
     { "key": "baseUrl", "value": "http://localhost:8080" },
     { "key": "email", "value": "verified-test-account@example.com" },
     { "key": "password", "value": "replace-me" },
-    { "key": "productId", "value": "hour" }
+    { "key": "productId", "value": "full_game" }
   ],
   "item": [
     {
@@ -45,7 +45,7 @@
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "X-CSRF-Token", "value": "{{csrfToken}}" }],
-        "body": { "mode": "raw", "raw": "{\n  \"productId\": \"{{productId}}\"\n}" },
+        "body": { "mode": "raw", "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"withdrawalConsent\": true\n}" },
         "url": "{{baseUrl}}/api/checkout/stripe"
       }
     },
@@ -54,7 +54,7 @@
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "X-CSRF-Token", "value": "{{csrfToken}}" }],
-        "body": { "mode": "raw", "raw": "{\n  \"productId\": \"{{productId}}\"\n}" },
+        "body": { "mode": "raw", "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"withdrawalConsent\": true\n}" },
         "url": "{{baseUrl}}/api/checkout/paypal"
       }
     }

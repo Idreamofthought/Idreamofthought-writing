@@ -56,7 +56,7 @@ import {
   requireAdmin
 } from "./security.js";
 
-import { PRODUCTS } from "./products.js";
+import { PRODUCTS, hasGamePurchase } from "./products.js";
 import {
   sendVerificationEmail,
   sendPasswordResetEmail
@@ -810,13 +810,10 @@ app.post("/api/delete-account", requireCsrf, authenticateRequest, generalApiLimi
 
 // Access time
 app.get("/api/access", authenticateRequest, (req, res) => {
-  if (hasFreeAccess(req.user.uid)) {
-    return res.json({
-      remainingSeconds: null,
-      canPlay: true,
-      freeAccess: true,
-      accessExpiresAt: null
-    });
+  const freeAccess = hasFreeAccess(req.user.uid);
+  const ownsGame = hasGamePurchase(db, req.user.uid);
+  if (freeAccess || ownsGame) {
+    return res.json({ remainingSeconds: null, canPlay: true, freeAccess, ownsGame, accessExpiresAt: null });
   }
 
   res.json(playAccess.read(req.user.uid));
@@ -824,13 +821,10 @@ app.get("/api/access", authenticateRequest, (req, res) => {
 
 // Heartbeat
 app.post("/api/access/heartbeat", requireCsrf, authenticateRequest, generalApiLimiter, (req, res) => {
-  if (hasFreeAccess(req.user.uid)) {
-    return res.json({
-      remainingSeconds: null,
-      canPlay: true,
-      freeAccess: true,
-      accessExpiresAt: null
-    });
+  const freeAccess = hasFreeAccess(req.user.uid);
+  const ownsGame = hasGamePurchase(db, req.user.uid);
+  if (freeAccess || ownsGame) {
+    return res.json({ remainingSeconds: null, canPlay: true, freeAccess, ownsGame, accessExpiresAt: null });
   }
 
   res.json(playAccess.grant(req.user.uid, { renew: true }));
@@ -838,7 +832,7 @@ app.post("/api/access/heartbeat", requireCsrf, authenticateRequest, generalApiLi
 
 // Stop access
 app.post("/api/access/stop", requireCsrf, authenticateRequest, generalApiLimiter, (req, res) => {
-  playAccess.stop(req.user.uid);
+  if (!hasGamePurchase(db, req.user.uid)) playAccess.stop(req.user.uid);
   res.json({ ok: true });
 });
 

@@ -1702,21 +1702,16 @@ function showPayBox(){
   document.getElementById('payBox').style.display = 'block';
   document.getElementById('whoami').textContent = `Signed in as ${currentUser.email}`;
   const payCardBtn = document.getElementById('payCardBtn');
-  const payPaypalBtn = document.getElementById('payPaypalBtn');
   if(hasFreeAccess){
     document.getElementById('verifyBanner').style.display = 'none';
     payCardBtn.style.display = 'none';
-    payPaypalBtn.style.display = 'none';
     return;
   }
   payCardBtn.style.display = '';
-  payPaypalBtn.style.display = '';
   const verified = !!currentUser.emailVerified;
   document.getElementById('verifyBanner').style.display = verified ? 'none' : 'block';
   payCardBtn.disabled = !verified;
-  payPaypalBtn.disabled = !verified;
   payCardBtn.style.opacity = verified ? '1' : '0.5';
-  payPaypalBtn.style.opacity = verified ? '1' : '0.5';
 }
 
 async function refreshFromServer(){
@@ -1729,7 +1724,7 @@ async function refreshFromServer(){
       document.getElementById('captainInput').value = captainName;
     }
     const s = await api('/api/access');
-    hasFreeAccess = !!s.freeAccess;
+    hasFreeAccess = Boolean(s.freeAccess || s.ownsGame);
     showPayBox();
     if(s.canPlay){
       const discoveries = await api('/api/discoveries');
@@ -1744,7 +1739,7 @@ async function refreshFromServer(){
     accessExpiresAt = s.accessExpiresAt || 0;
     if(s.canPlay){
       const heartbeat = await api('/api/access/heartbeat',{method:'POST'});
-      hasFreeAccess = !!heartbeat.freeAccess;
+      hasFreeAccess = Boolean(heartbeat.freeAccess || heartbeat.ownsGame);
       if(hasFreeAccess){
         accessExpiresAt = Infinity;
         startPlaying();
@@ -1779,8 +1774,8 @@ function pausePlaying(){
   clearInterval(sessionInterval); sessionInterval = null;
   document.getElementById('timeline').textContent = '';
   document.getElementById('paywall').style.display = 'flex';
-  document.getElementById('pwTitle').textContent = accessExpiresAt ? "🏛️ Your hour's up" : '🏛️ Breluce Pass';
-  document.getElementById('pwDesc').textContent = accessExpiresAt ? 'Buy another hour to keep building.' : 'Sign in, then buy a Breluce pass to play.';
+  document.getElementById('pwTitle').textContent = accessExpiresAt ? 'Previous play time ended' : 'Unlock Breluce';
+  document.getElementById('pwDesc').textContent = accessExpiresAt ? 'Unlock the full game with a one-time US$4.99 purchase.' : 'Sign in to unlock Breluce with a one-time US$4.99 purchase.';
   if(currentUser) showPayBox(); else showAuthBox();
 }
 
@@ -1788,7 +1783,7 @@ async function heartbeatAccess(){
   if(!currentUser) return;
   try{
     const a=await api('/api/access/heartbeat',{method:'POST'});
-    hasFreeAccess = !!a.freeAccess;
+    hasFreeAccess = Boolean(a.freeAccess || a.ownsGame);
     if(hasFreeAccess){
       accessExpiresAt = Infinity;
       document.getElementById('timeline').textContent = '';
@@ -1839,14 +1834,7 @@ document.getElementById('logoutBtn').onclick = async ()=>{
   currentUser = null; accessExpiresAt = 0; hasFreeAccess = false;
   pausePlaying();
 };
-document.getElementById('payCardBtn').onclick = async ()=>{
-  try{ const {url} = await api('/api/checkout/stripe', {method:'POST', body: JSON.stringify({productId:'hour'})}); window.location.href = url; }
-  catch(e){ showToast(e.message); }
-};
-document.getElementById('payPaypalBtn').onclick = async ()=>{
-  try{ const {url} = await api('/api/checkout/paypal', {method:'POST', body: JSON.stringify({productId:'hour'})}); window.location.href = url; }
-  catch(e){ showToast(e.message); }
-};
+document.getElementById('payCardBtn').onclick = ()=>{ location.href='/purchase.html'; };
 document.getElementById('resendBtn').onclick = async ()=>{
   try{
     const r = await api('/api/resend-verification', {method:'POST'});
@@ -1864,14 +1852,14 @@ if(paymentParams.get('provider') === 'paypal' && paymentParams.get('status') ===
   }).then(()=>{
     history.replaceState({}, '', '/game');
     refreshFromServer();
-    showToast('PayPal payment confirmed — your time has been added.');
+    showToast('PayPal payment confirmed.');
   }).catch(e=> showToast(e.message));
 }
 if(paidParam === 'stripe' || paidParam === 'paypal') showToast('Payment received — welcome back!');
 else if(paidParam === 'error') showToast('Payment could not be confirmed — please try again');
 
 const verifyParam = new URLSearchParams(window.location.search).get('verify');
-if(verifyParam === 'success') showToast('Email verified — you can now buy a pass!');
+if(verifyParam === 'success') showToast('Email verified — you can now buy Breluce!');
 else if(verifyParam === 'invalid') showToast('That verification link is invalid or expired — resend a new one below');
 else if(verifyParam === 'missing') showToast('Verification link was incomplete');
 

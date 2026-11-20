@@ -38,7 +38,7 @@ people who inhabit it.
 ### Explore the project
 
 - [I Dream of Thought](https://www.idreamofthought.org/) - the writing and creative archive
-- [Play Breluce](https://breluce.idreamofthought.org/) - enter the game
+- [Play Breluce](https://www.idreamofthought.org/game) - the browser edition is a one-time US$4.99 purchase
 - [About Breluce](https://www.idreamofthought.org/portus/) - read the premise and world overview
 - [Writing archive](https://www.idreamofthought.org/writing/index.html) - poetry, fiction, philosophy, dreams, and ideas
 - [Breluce lore](lore/README.md) - worldbuilding, Codex, myths, events, and narrative sources

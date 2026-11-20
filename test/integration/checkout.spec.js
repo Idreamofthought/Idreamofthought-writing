@@ -26,14 +26,13 @@ describe("checkout session creation", () => {
     const res = await session.request("GET", "/api/products");
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body.products)).toBe(true);
-    expect(res.body.products.some((p) => p.id === "hour")).toBe(true);
-    expect(res.body.products.every((p) => p.currency === "EUR")).toBe(true);
+    expect(res.body.products).toEqual([{ id: "full_game", label: "Full game", minutes: 0, amount: "4.99", currency: "USD" }]);
   });
 
   test.each(["stripe", "paypal"])("%s checkout requires an explicit boolean consent", async (provider) => {
     const session = await loggedInSession(`consent-${provider}`, cleanupEmails);
     for (const value of [undefined, false, "true", 1]) {
-      const body = { productId: "hour" };
+      const body = { productId: "full_game" };
       if (value !== undefined) body.withdrawalConsent = value;
       const res = await session.postCsrf(`/api/checkout/${provider}`, body);
       expect(res.status).toBe(400);
@@ -62,15 +61,15 @@ describe("checkout session creation", () => {
     }
   });
 
-  test("Stripe checkout creation rejects an unknown productId", async () => {
+  test("Stripe checkout creation rejects retired hourly checkout", async () => {
     const session = await loggedInSession("checkout-stripe", cleanupEmails);
-    const res = await session.postCsrf("/api/checkout/stripe", { productId: "not-a-real-product", withdrawalConsent: true });
+    const res = await session.postCsrf("/api/checkout/stripe", { productId: "hour", withdrawalConsent: true });
     expect(res.status).toBe(400);
   });
 
-  test("PayPal order creation rejects an unknown productId", async () => {
+  test("PayPal order creation rejects retired hourly checkout", async () => {
     const session = await loggedInSession("checkout-paypal", cleanupEmails);
-    const res = await session.postCsrf("/api/checkout/paypal", { productId: "not-a-real-product", withdrawalConsent: true });
+    const res = await session.postCsrf("/api/checkout/paypal", { productId: "hour", withdrawalConsent: true });
     expect(res.status).toBe(400);
     expect(res.body.error).toBe("invalid product");
   });
