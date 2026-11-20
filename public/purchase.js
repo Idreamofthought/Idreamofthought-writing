@@ -45,7 +45,13 @@ async function init() {
     } else if (provider === "stripe" && status === "success" && params.get("session_id")) {
       result = await apiPost("/api/checkout/stripe/confirm", { sessionId: params.get("session_id") });
     } else if (status === "cancelled") {
-      message.textContent = "Payment cancelled.";
+      const checkoutKey = params.get("checkout_key");
+      if (checkoutKey) {
+        const cancellation = await apiPost("/api/checkout/cancel", { checkoutKey });
+        message.textContent = cancellation.ok ? "Payment cancelled." : cancellation.error || "Could not cancel the checkout.";
+      } else {
+        message.textContent = "Payment cancelled.";
+      }
     }
     if (result) message.textContent = result.ok ? "Payment confirmed." : result.error || "Payment could not be confirmed.";
 
