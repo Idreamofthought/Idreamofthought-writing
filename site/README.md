@@ -19,3 +19,10 @@ Do not describe a piece as published merely because its Markdown file exists in 
 - `site/writing/essays/`: canonical Markdown source/archive for essays.
 - `homepage/`: current production-facing site pages and content.
 - Railway production status: the writing service and custom domains are live; the last observed deployment succeeded on 2026-10-25. This confirms deployment health, not that every file in `site/` is published.
+
+## Republishing on Substack
+
+1. Choose one piece or a small batch from the [writing catalogue](https://www.idreamofthought.org/writing/). Use each piece’s live leaf URL as its original source.
+2. Prepare each post as a Substack draft. Preserve the title, language, and formatting. For poems, check line breaks in the preview. Add a link back to the original on I Dream of Thought.
+3. Keep each republished piece available to free readers and leave its original site page freely accessible. Preview the draft before scheduling it.
+4. Record the original URL, Substack post URL, and publication date together so each piece is republished only once.
