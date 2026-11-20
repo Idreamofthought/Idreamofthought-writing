@@ -1,5 +1,5 @@
 /* ============================================================
-   TIME MODULE — Portus
+   TIME MODULE — Breluce
    Full version: global tick, seasons, day counter, twilight
    integration, favour tick, disaster tick, warnings tick,
    production/consumption tick, research tick.

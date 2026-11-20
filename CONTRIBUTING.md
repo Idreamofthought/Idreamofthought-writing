@@ -1,4 +1,4 @@
-# Contributing to Portus
+# Contributing to Breluce
 
 This guide keeps changes organised for the project and for future-you.
 

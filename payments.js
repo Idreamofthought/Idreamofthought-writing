@@ -117,7 +117,7 @@ export async function createStripeCheckout({ userId, productId, withdrawalConsen
     customer: customerId,
     line_items: [{ price_data: {
       currency: product.currency.toLowerCase(),
-      product_data: { name: `Portus — ${product.label}` },
+      product_data: { name: `Breluce — ${product.label}` },
       unit_amount: Math.round(Number(product.amount) * 100)
     }, quantity: 1 }],
     success_url: `${siteUrl}/purchase.html?provider=stripe&status=success&session_id={CHECKOUT_SESSION_ID}`,

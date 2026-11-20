@@ -6,7 +6,7 @@ planting, the first shadow on the western cairn, and the night the river rises
 without rain.
 
 The Sky-Readers and River People disagreed about what the missing pieces meant.
-Both were right about one thing: time in Portus is measured by what comes back
+Both were right about one thing: time in Breluce is measured by what comes back
 changed.
 
 **Recovered lesson:** prediction is not control. It is a way to meet a season
@@ -21,7 +21,7 @@ related_artifacts: ../../items/timekeeper_set.md
 
 # CODEX: The Lore of Time
 
-*Portus Codex - Cycles Chapter I*
+*Breluce Codex - Cycles Chapter I*
 
 ## I. The First Breath of Time
 
@@ -62,7 +62,7 @@ When it strengthens, the world becomes wild.
 - storms arriving early
 - animals moving strangely
 
-**In Portus:**
+**In Breluce:**
 The Flow determines the rhythm of disasters.
 
 ## III. The Memory - The Stones That Endure
@@ -96,7 +96,7 @@ The Memory is the part of Time that **does not move**.
 - old paths reappearing
 - ancestral rituals resurfacing
 
-**In Portus:**
+**In Breluce:**
 The Memory determines favour with the Three Forces.
 
 ## IV. The Return - The Cycle That Cannot Be Broken
@@ -130,7 +130,7 @@ It is why:
 - repeating prosperity
 - repeating mistakes
 
-**In Portus:**
+**In Breluce:**
 The Return determines Twilight and Nightfall.
 
 ## V. The Three Forces of Time
@@ -178,7 +178,7 @@ Kings fall to it.
 Cultures forget it.
 Oral history remembers it.
 
-This is the cycle Portus is built upon.
+This is the cycle Breluce is built upon.
 
 ## VII. The Oral World and the Elders of Time
 
@@ -201,7 +201,7 @@ Oral history preserved the truth that dogma later broke:
 
 Baltic tree-speakers, barefoot hunters, Neanderthal elders - all lived in harmony with Time's movements.
 
-Portus remembers them.
+Breluce remembers them.
 
 ## VIII. Twilight - When Time Thins
 
@@ -239,4 +239,4 @@ The stones go silent.
 The river forgets its path.
 The sky closes.
 
-Portus must prevent Nightfall.
+Breluce must prevent Nightfall.

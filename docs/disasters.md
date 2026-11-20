@@ -1,7 +1,7 @@
 # Disasters
 
 ## Purpose
-Disasters are not simply negative events. In Portus, they are moments of existential friction that force the settlement to adapt, remember, or reinterpret its priorities.
+Disasters are not simply negative events. In Breluce, they are moments of existential friction that force the settlement to adapt, remember, or reinterpret its priorities.
 
 ## Roles
 - Create urgency and consequence

@@ -1,6 +1,6 @@
-# Portus Documentation
+# Breluce Documentation
 
-This folder contains the working documentation for Portus worldbuilding,
+This folder contains the working documentation for Breluce worldbuilding,
 systems, and development. The repository root remains the source of truth for
 the main project overview, roadmap, and contribution workflow:
 

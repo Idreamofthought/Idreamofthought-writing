@@ -1,7 +1,7 @@
 # Developer Guide
 
 ## Scope
-This folder contains the design and system documentation for Portus. It is intended to help maintainers and contributors preserve the project’s tone, structure, and design logic.
+This folder contains the design and system documentation for Breluce. It is intended to help maintainers and contributors preserve the project’s tone, structure, and design logic.
 
 ## Important principles
 - Keep the project emotionally coherent

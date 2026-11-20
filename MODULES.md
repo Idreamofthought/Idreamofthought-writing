@@ -1,4 +1,4 @@
-# Portus Modules
+# Breluce Modules
 
 The live browser game is served from a single file: `protected/game.html`.
 It contains the map generator, building catalogue, economy tick, research

@@ -57,5 +57,5 @@ export default async function globalSetup() {
 
   const logs = output || "Server did not become ready in time.";
   child.kill("SIGTERM");
-  throw new Error(`Failed to start Portus test server: ${logs}`);
+  throw new Error(`Failed to start Breluce test server: ${logs}`);
 }

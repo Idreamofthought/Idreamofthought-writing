@@ -1,7 +1,7 @@
 # Design Bible
 
 ## Core design statement
-Portus is a contemplative city-building experience where survival, myth, and memory are inseparable. The player builds a settlement not purely for growth, but for meaning.
+Breluce is a contemplative city-building experience where survival, myth, and memory are inseparable. The player builds a settlement not purely for growth, but for meaning.
 
 ## Aesthetic direction
 - dreamlike, atmospheric, and intimate
@@ -24,4 +24,4 @@ The project should feel as though it was assembled from memory, ritual, and drif
 - Does it remain understandable without losing mystique?
 
 ## Summary
-Portus is not about maximizing efficiency at all costs. It is about shaping a fragile, dream-anchored community that becomes richer through attention, care, and interpretation.
+Breluce is not about maximizing efficiency at all costs. It is about shaping a fragile, dream-anchored community that becomes richer through attention, care, and interpretation.

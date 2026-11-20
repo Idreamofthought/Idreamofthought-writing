@@ -1,5 +1,5 @@
 name: Bug report
-description: Report something in Portus that is not working as expected.
+description: Report something in Breluce that is not working as expected.
 labels:
   - bug
 body:

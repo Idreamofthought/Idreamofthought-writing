@@ -25,7 +25,7 @@ function check(label, relativePath) {
   if (!ok) failures += 1;
 }
 
-console.log("Portus structure validation\n");
+console.log("Breluce structure validation\n");
 
 for (const directory of ["public", "public/sounds", "protected", "protected/js", "migrations"]) {
   check("required path", directory);

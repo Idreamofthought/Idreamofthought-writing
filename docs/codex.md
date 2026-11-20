@@ -5,7 +5,7 @@ The Codex is the game’s structured repository of knowledge: fragments of histo
 
 ## Function
 The codex should help the player understand:
-- the world of Portus
+- the world of Breluce
 - the way the settlement interacts with memory and dream
 - the symbolism behind key systems and events
 - hidden consequences of choices and disasters

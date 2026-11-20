@@ -1,4 +1,4 @@
-# Portus API
+# Breluce API
 
 The API is same-origin and served by `server.js`. JSON endpoints use cookie-based authentication. Mutating requests require a CSRF token unless noted otherwise.
 

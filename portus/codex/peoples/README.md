@@ -1,3 +1,3 @@
 # Peoples
 
-Codex entries about the peoples of Portus.
+Codex entries about the peoples of Breluce.

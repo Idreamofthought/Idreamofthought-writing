@@ -51,13 +51,13 @@ function scheduleBar(){
   state.step++;
 }
 
-export function createPortusMusic(button, playingLabel = 'Pause Portus music'){
+export function createPortusMusic(button, playingLabel = 'Pause Breluce music'){
   if(!button) return;
   const updateLabel = () => {
     state.controls.forEach(control => {
       control.textContent = control.id === 'musicToggle'
         ? (state.active ? 'Music: On' : 'Music: Off')
-        : (state.active ? playingLabel : 'Play Portus music');
+        : (state.active ? playingLabel : 'Play Breluce music');
       control.setAttribute('aria-pressed', String(state.active));
     });
   };

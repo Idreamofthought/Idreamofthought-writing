@@ -7,7 +7,7 @@ title: The Sky
 
 ## The Reckoning Bone
 
-Before Portus had towers, the shore-keepers carried a dark bone scored with
+Before Breluce had towers, the shore-keepers carried a dark bone scored with
 small cuts. Each cut was a night that had returned. Each gap between cuts was
 a promise that it would return again.
 
@@ -26,7 +26,7 @@ They did not believe the bone commanded the sky. They believed it taught the
 eye to notice return: a moon after a moon, a season after a season, a world
 made legible by what came back.
 
-When the sea swallowed the old shore, the bone was carried inland. Portus
+When the sea swallowed the old shore, the bone was carried inland. Breluce
 still keeps its image beneath the Observatory, not as proof of a single first
 calendar, but as a reminder that time begins when someone chooses to count
 what matters.

@@ -1,58 +1,58 @@
-# Portus Game Server
+# I Dream of Thought Writing
 
 **A mythic strategy game of favour, catastrophe, and deep-time lore.**
 
-[![CI](https://github.com/idreamofthought/portus-server/actions/workflows/ci.yml/badge.svg)](https://github.com/idreamofthought/portus-server/actions/workflows/ci.yml)
+[![CI](https://github.com/Idreamofthought/Idreamofthought-writing/actions/workflows/ci.yml/badge.svg)](https://github.com/Idreamofthought/Idreamofthought-writing/actions/workflows/ci.yml)
 [![Live site](https://img.shields.io/badge/live-idreamofthought.org-38556b)](https://www.idreamofthought.org/)
 
-![Portus and I Dream of Thought](public/images/idream-of-thought-social-card.svg)
+![Breluce and I Dream of Thought](public/images/idream-of-thought-social-card.svg)
 
-Portus is a contemplative browser city-building game from Richard Jenkins and
+Breluce is a contemplative browser city-building game from Richard Jenkins and
 the I Dream of Thought creative universe. This repository contains its Express
 server, browser client, account and access systems, public site, and canonical
 worldbuilding sources.
 
 I Dream of Thought is a creative home for poetry, fiction, philosophy, dream
 writing, nature, memory, and the ecology of imagination. Its interactive
-flagship is **Portus**, a dreamlike city-building game about memory, myth, and
+flagship is **Breluce**, a dreamlike city-building game about memory, myth, and
 survival.
 
 > Source is available here for viewing and development. No open-source
 > licence is published; all rights are reserved on the code, writing, art,
-> audio, and Portus lore unless a file states otherwise. See
+> audio, and Breluce lore unless a file states otherwise. See
 > [License and reuse](#license-and-reuse) below.
 
-## Portus
+## Breluce
 
 > **Build a city. Discover its memory.**
 
-Portus is a surreal, atmospheric city-building game where a shipwreck survivor
+Breluce is a surreal, atmospheric city-building game where a shipwreck survivor
 shapes a fragile settlement beside the sea. Gather resources, build carefully,
 interpret warnings, survive disasters, and uncover the lore of a world that
 seems to remember what happens in it.
 
-Portus is not designed as a race for expansion. It is a slower, stranger form
+Breluce is not designed as a race for expansion. It is a slower, stranger form
 of strategy: a place to explore, endure, and learn what a landscape asks of the
 people who inhabit it.
 
 ### Explore the project
 
 - [I Dream of Thought](https://www.idreamofthought.org/) - the writing and creative archive
-- [Play Portus](https://www.idreamofthought.org/game) - enter the game
-- [About Portus](https://www.idreamofthought.org/portus/) - read the premise and world overview
+- [Play Breluce](https://breluce.idreamofthought.org/) - enter the game
+- [About Breluce](https://www.idreamofthought.org/portus/) - read the premise and world overview
 - [Writing archive](https://www.idreamofthought.org/writing/index.html) - poetry, fiction, philosophy, dreams, and ideas
-- [Portus lore](lore/README.md) - worldbuilding, Codex, myths, events, and narrative sources
-- [Portus documentation](docs/README.md) - systems, worldbuilding, artifacts, and developer guides
+- [Breluce lore](lore/README.md) - worldbuilding, Codex, myths, events, and narrative sources
+- [Breluce documentation](docs/README.md) - systems, worldbuilding, artifacts, and developer guides
 
 ## What this repository contains
 
-The repository contains the full Portus server and public creative site:
+The repository contains the full Breluce server and public creative site:
 
 - Express routes for authentication, access, saves, payments, and webhooks
 - The browser game client and protected game mode
 - The I Dream of Thought homepage and writing tree
 - Modular resource, research, favour, disaster, warning, and Codex systems
-- Canonical Portus lore, quests, items, events, and NPC dialogue
+- Canonical Breluce lore, quests, items, events, and NPC dialogue
 
 For API contracts, see [API.md](API.md). For launch and deployment checks, see
 [LAUNCH.md](LAUNCH.md) and [the Railway checklist](docs/RAILWAY-DEPLOYMENT-CHECKLIST.md).
@@ -64,7 +64,7 @@ For API contracts, see [API.md](API.md). For launch and deployment checks, see
 - Translucent panels and blurred glass effects
 - Soft glowing borders and atmospheric resource ledger
 - Serif typography and floating glyph-style buttons
-- Portus wordmark and inharmonic ambient soundscape
+- Breluce wordmark and inharmonic ambient soundscape
 
 ### Pixel-Art World (24x24 Tiles)
 
@@ -116,7 +116,7 @@ The game client and server currently expose these systems:
 │   └── prologue.html
 ├── homepage/                       public site and writing tree
 ├── css/                            shared homepage and protected-page styles
-├── lore/                           index for Portus worldbuilding sources
+├── lore/                           index for Breluce worldbuilding sources
 ├── routes/                         authenticated player-state APIs
 ├── models/                         persistence helpers
 ├── migrations/                     explicit SQLite migrations
@@ -128,7 +128,7 @@ The game client and server currently expose these systems:
 └── validate-structure.js           non-destructive layout checks
 ```
 
-See [lore/README.md](lore/README.md) for the Portus content map and
+See [lore/README.md](lore/README.md) for the Breluce content map and
 [ROADMAP.md](ROADMAP.md) for planned work.
 
 ### Lore Structure
@@ -145,7 +145,7 @@ lore/
 └── fragments/
 ```
 
-The current Portus source remains in `portus/` while these categories are
+The current Breluce source remains in `portus/` while these categories are
 expanded and connected to the public site and in-game Codex.
 
 
@@ -205,7 +205,7 @@ npm run validate:structure
 
 ## Deployment
 
-Portus is deployed on Railway. The server exposes:
+Breluce is deployed on Railway. The server exposes:
 
 ```text
 /                    homepage
@@ -222,7 +222,7 @@ are present in the service variables and that the `EMAIL_FROM` domain is
 verified in Resend. See the [Railway deployment checklist](docs/RAILWAY-DEPLOYMENT-CHECKLIST.md)
 for the complete release checks.
 
-The Portus client is mounted with:
+The Breluce client is mounted with:
 
 ```js
 app.use("/portus", express.static(path.join(__dirname, "public")));
@@ -306,6 +306,6 @@ Please do not report security vulnerabilities in public issues. See
 ## License and reuse
 
 This repository does not currently publish an open-source license. Unless a
-file says otherwise, code, writing, artwork, audio, and Portus worldbuilding
+file says otherwise, code, writing, artwork, audio, and Breluce worldbuilding
 remain copyright of their respective creators. Contact the project owner before
 reusing or redistributing any material.

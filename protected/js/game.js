@@ -229,7 +229,7 @@ const CIVIC_MESSAGES = {
   school:'🏫 Children gather as the first school opens.',
   doctor:'⚕️ The town welcomes its first doctor.',
   market:'🛒 Traders crowd into the town’s first market.',
-  temple:'⛩️ The first temple bells sound across Portus.'
+  temple:'⛩️ The first temple bells sound across Breluce.'
 };
 
 function payCivicMaintenance(){
@@ -889,7 +889,7 @@ function renderRes(){
 function renderPanel(){
   const list = document.getElementById('buildingList');
   if(!list){
-    console.error('Portus: buildingList missing');
+    console.error('Breluce: buildingList missing');
     return;
   }
   list.innerHTML='';
@@ -1779,8 +1779,8 @@ function pausePlaying(){
   clearInterval(sessionInterval); sessionInterval = null;
   document.getElementById('timeline').textContent = '';
   document.getElementById('paywall').style.display = 'flex';
-  document.getElementById('pwTitle').textContent = accessExpiresAt ? "🏛️ Your hour's up" : '🏛️ Portus Pass';
-  document.getElementById('pwDesc').textContent = accessExpiresAt ? 'Buy another hour to keep building.' : 'Sign in, then buy a Portus pass to play.';
+  document.getElementById('pwTitle').textContent = accessExpiresAt ? "🏛️ Your hour's up" : '🏛️ Breluce Pass';
+  document.getElementById('pwDesc').textContent = accessExpiresAt ? 'Buy another hour to keep building.' : 'Sign in, then buy a Breluce pass to play.';
   if(currentUser) showPayBox(); else showAuthBox();
 }
 
@@ -2669,7 +2669,7 @@ function finishMarshPrologue(){
     {
       id:'terms',
       title:'Before you begin',
-      html:'By playing Portus you agree to the <a href="/terms.html" target="_blank" style="color:#2b6777;">Terms of Service</a> and <a href="/privacy.html" target="_blank" style="color:#2b6777;">Privacy Policy</a>.',
+      html:'By playing Breluce you agree to the <a href="/terms.html" target="_blank" style="color:#2b6777;">Terms of Service</a> and <a href="/privacy.html" target="_blank" style="color:#2b6777;">Privacy Policy</a>.',
       checkLabel:'I agree to the terms',
       require:true
     },

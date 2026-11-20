@@ -5,7 +5,7 @@
 - Expand the player-facing Codex with the remaining artifact, disaster, geology, ritual, and sky entries.
 - Add focused tests for payment webhooks, entitlement checks, and Codex allowlisting.
 - Run the provider sandbox checks in `API.md`: Stripe Checkout plus webhook replay, then PayPal order, capture, and webhook replay. Keep provider credentials out of the repository.
-- Keep the public Portus preview current as new game systems become playable.
+- Keep the public Breluce preview current as new game systems become playable.
 - Add browser smoke coverage for panel rendering, save/load, and protected-route startup (see Game modularization plan, step 4).
 
 ## Save validation
@@ -31,10 +31,10 @@
 ## Medium term
 
 - Make the writing and lore indexes easier to maintain without changing public URLs.
-- Add a lightweight public content search across writing and Portus lore.
+- Add a lightweight public content search across writing and Breluce lore.
 - Improve mobile and accessibility checks for the homepage, writing pages, and game panels.
 
 ## Long term
 
-- Evaluate separating the public site, Portus application, and lore source into independent repositories only if their release and deployment needs diverge.
+- Evaluate separating the public site, Breluce application, and lore source into independent repositories only if their release and deployment needs diverge.
 - Preserve stable URLs and a single documented source of truth before attempting any repository split.
