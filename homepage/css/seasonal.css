@@ -312,3 +312,13 @@
   .entrance-controls { justify-content: center; }
   .entrance-note { text-align: center; }
 }
+
+
+.reflection-card { background: linear-gradient(145deg, #f4e8d5, #fffaf0); }
+.reflection-sheet h1 { max-width: 700px; }
+.reflection-prose {
+  max-width: 68ch;
+  color: #2d3e39;
+  font: 1.08rem/1.85 Georgia, "Times New Roman", serif;
+}
+.reflection-prose p { margin: 0 0 1.35em; }
