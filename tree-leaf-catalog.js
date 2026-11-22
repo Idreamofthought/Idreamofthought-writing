@@ -1,6 +1,7 @@
 // Generated from the 250-post category master and supplemented by newer writing.
 // The writing files remain the source text; these routes give every work a home on the Tree.
 export const TREE_LEAVES = [
+  {"title":"Thoughts on Talent","branch":"philosophy-ideas","category":"Essay · Talent, judgement & accountability","slug":"thoughts-on-talent","source":"writing/opinions/thoughts-on-talent.html","published":"2026-11-22"},
   {"title":"November","branch":"poems","category":"Poetry · November","slug":"november","source":"writing/poetry/november.html","published":"2026-11-12"},
   {"title":"A New Deal for Europe","branch":"politics","category":"Discussion paper · Politics & Society · Europe","slug":"a-new-deal-for-europe","source":"writing/opinions/a-new-deal-for-europe.html","published":"2026-11-11"},
     {"title":"Une dette de gratitude, un devoir d\u0027avenir","branch":"politics","category":"Essai · Politique et société · Français","slug":"une-dette-de-gratitude-un-devoir-davenir","source":"writing/opinions/une-dette-de-gratitude-un-devoir-davenir.html","published":"2026-10-26"},
