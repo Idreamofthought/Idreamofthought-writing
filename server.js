@@ -177,6 +177,14 @@ function readCodexEntry(entryId) {
 
 app.set("trust proxy", 1);
 
+const CANONICAL_HOST = new URL(SITE_URL).hostname.toLowerCase();
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV !== "production") return next();
+  const host = req.hostname.toLowerCase();
+  if (host === CANONICAL_HOST || host === "localhost" || host === "127.0.0.1" || host.endsWith(".railway.internal")) return next();
+  return res.redirect(308, new URL(req.originalUrl, SITE_URL).toString());
+});
+
 app.use(helmet({ contentSecurityPolicy: false }));
 
 const cspHeaderName = process.env.CSP_REPORT_ONLY === "1"
@@ -232,6 +240,9 @@ app.use(express.json({ limit: "1mb", verify: (req, _res, buffer) => {
 } }));
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
+app.get("/health-and-screen-use", (_req, res) =>
+  res.sendFile(path.join(__dirname, "public/health-and-screen-use.html"))
+);
 
 // Historical posts and bookmarks used this game address.
 app.get("/game.html", (_req, res) => res.redirect(301, ROUTES.game));
@@ -240,9 +251,22 @@ app.get("/game.html", (_req, res) => res.redirect(301, ROUTES.game));
 // STATIC FILES
 // ============================================================
 
-app.get(["/portus", "/portus/"], (_req, res) =>
-  res.sendFile(path.join(__dirname, "homepage/portus/index.html"))
-);
+const BRELUCE_ORIGIN = "https://breluce.idreamofthought.org";
+app.get(/^\/portus(?:\/(.*))?$/, (req, res) => {
+  const legacyPath = req.params[0] || "";
+  const redirects = {
+    "": "/",
+    "gameplay": "/gameplay/",
+    "gameplay/": "/gameplay/",
+    "gameplay/index.html": "/gameplay/",
+    "roadmap.html": "/roadmap",
+    "trailer.html": "/trailer"
+  };
+  const destination = redirects[legacyPath] || `/${legacyPath}`;
+  const target = new URL(destination, BRELUCE_ORIGIN);
+  target.search = new URL(req.originalUrl, "http://localhost").search;
+  return res.redirect(301, target.toString());
+});
 
 app.get(["/tree", "/tree/", "/tree/index.html"], (_req, res) =>
   res.sendFile(path.join(__dirname, "homepage/tree/index.html"))
@@ -383,7 +407,7 @@ app.use(express.static(path.join(__dirname, "homepage")));
 app.use(express.static(path.join(__dirname, "public")));
 
 // ============================================================
-// PORTUS GAME ROUTING
+// BRELUCE GAME ROUTING
 // ============================================================
 
 app.use(
@@ -427,7 +451,7 @@ app.get("/fragments", (_req, res) =>
 app.get(["/writing", "/writing/"], (_req, res) =>
   res.sendFile(path.join(__dirname, "homepage/writing/index.html"))
 );
-app.get("/portus-info", (_req, res) => res.redirect(301, "/portus/"));
+app.get("/portus-info", (_req, res) => res.redirect(301, `${BRELUCE_ORIGIN}/`));
 app.get("/legal", generalApiLimiter, (_req, res) =>
   res.sendFile(path.join(__dirname, "public/legal.html"))
 );
