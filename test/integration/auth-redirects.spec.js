@@ -100,21 +100,22 @@ describe("auth redirect states", () => {
     expect(res.status).toBe(200);
   });
 
-  test("GET /portus-info redirects to /portus/", async () => {
+  test("GET /portus-info redirects to https://breluce.idreamofthought.org/", async () => {
     const res = await fetch(`${BASE_URL}/portus-info`, {
       headers: { Accept: "text/html" },
       redirect: "manual"
     });
     expect(res.status).toBe(301);
-    expect(res.headers.get("location")).toBe("/portus/");
+    expect(res.headers.get("location")).toBe("https://breluce.idreamofthought.org/");
   });
 
-  test("GET /portus stays public", async () => {
+  test("GET /portus redirects to the Breluce site", async () => {
     const res = await fetch(`${BASE_URL}/portus`, {
       headers: { Accept: "text/html" },
       redirect: "manual"
     });
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(301);
+    expect(res.headers.get("location")).toBe("https://breluce.idreamofthought.org/");
   });
 
   test("failure-state redirect chains never revisit the same URL", async () => {
