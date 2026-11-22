@@ -1,0 +1,129 @@
+.seasonal-page {
+  --season-ink: #182c2b;
+  --season-pine: #23413b;
+  --season-paper: #f1f0e9;
+  --season-mist: #dce7e5;
+  --season-copper: #a56546;
+  background: var(--season-paper);
+  color: var(--season-ink);
+}
+.seasonal-hero {
+  min-height: 66vh;
+  padding: clamp(72px, 11vw, 150px) clamp(24px, 11vw, 170px);
+  color: #f5f3ec;
+  background:
+    radial-gradient(ellipse at 78% 18%, rgba(238, 223, 188, .34), transparent 18%),
+    radial-gradient(ellipse at 75% 20%, rgba(220, 231, 229, .16), transparent 34%),
+    linear-gradient(145deg, #203a37 0%, #34534c 58%, #65736a 100%);
+}
+.seasonal-kicker {
+  margin: 0 0 14px;
+  color: var(--season-copper);
+  font: 700 .72rem/1.5 "Trebuchet MS", sans-serif;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.seasonal-hero .seasonal-kicker { color: #e1c891; }
+.seasonal-hero h1 {
+  max-width: 900px;
+  margin: 0;
+  font-size: clamp(3.4rem, 9vw, 7.8rem);
+  line-height: .98;
+  letter-spacing: -.045em;
+}
+.seasonal-hero h1 em { color: #e5d3a8; font-weight: 400; }
+.seasonal-lead {
+  max-width: 660px;
+  margin: 28px 0 32px;
+  color: #e8e8df;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+}
+.seasonal-button, .seasonal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  font-weight: 700;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+.seasonal-button {
+  padding: 12px 16px;
+  border: 1px solid rgba(245, 243, 236, .55);
+  border-radius: 999px;
+  text-decoration: none;
+}
+.seasonal-button:hover { background: rgba(255,255,255,.12); }
+.seasonal-intro {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 76px 24px 38px;
+}
+.seasonal-intro h2, .seasonal-card h2 {
+  margin: 0 0 16px;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.1;
+}
+.seasonal-intro > p:last-child, .seasonal-card > p:not(.seasonal-kicker) {
+  max-width: 680px;
+  color: #43534f;
+  font-size: 1.08rem;
+}
+.seasonal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 24px 60px;
+}
+.seasonal-card {
+  min-height: 310px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid rgba(24, 44, 43, .14);
+  border-radius: 18px;
+  background: #fbfaf6;
+  box-shadow: 0 16px 48px rgba(24, 44, 43, .07);
+}
+.seasonal-card .seasonal-link { margin-top: auto; }
+.hollow-card { background: linear-gradient(145deg, #292d31, #443b38); color: #f2eee5; }
+.hollow-card > p:not(.seasonal-kicker) { color: #d7d0c8; }
+.hollow-card .seasonal-kicker { color: #dfa57d; }
+.seasonal-note {
+  padding: 36px 24px 64px;
+  text-align: center;
+}
+.seasonal-note p { font-size: 1.2rem; }
+.seasonal-note a { color: var(--season-pine); text-underline-offset: 4px; }
+.seasonal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 14px 28px;
+  padding: 28px clamp(24px, 6vw, 92px);
+  border-top: 1px solid rgba(24, 44, 43, .16);
+}
+.seasonal-footer a { color: var(--season-pine); }
+.seasonal-teaser {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 18px;
+  margin: 36px clamp(24px, 6vw, 92px);
+  padding: clamp(22px, 4vw, 38px);
+  border: 1px solid rgba(24, 44, 43, .18);
+  border-radius: 18px;
+  color: #f5f3ec;
+  background: linear-gradient(115deg, #203a37, #58695e);
+}
+.seasonal-teaser h2 { margin: 0 0 8px; font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.seasonal-teaser p { max-width: 660px; margin: 0 0 10px; color: #e5e6dd; }
+.seasonal-teaser .seasonal-kicker { color: #e1c891; }
+.seasonal-teaser a { color: #fff; text-underline-offset: 4px; }
+@media (max-width: 680px) {
+  .seasonal-grid { grid-template-columns: 1fr; }
+  .seasonal-teaser { grid-template-columns: 1fr; margin: 24px; }
+}
