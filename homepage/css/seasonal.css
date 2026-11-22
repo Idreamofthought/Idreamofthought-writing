@@ -231,3 +231,84 @@
 @media (max-width: 600px) {
   .poem-sheet { padding: 28px 22px; border-radius: 16px; }
 }
+
+
+/* Interactive Christmas entrance, styled to echo The Hollow's doorway. */
+.seasonal-hero { grid-template-columns: minmax(0, 1fr) minmax(280px, .9fr); }
+.seasonal-hero-copy { max-width: 680px; }
+.christmas-entrance { position: relative; z-index: 1; width: min(100%, 430px); justify-self: center; text-align: center; }
+.christmas-door { display: block; width: 100%; color: #fff6dc; text-decoration: none; filter: drop-shadow(0 22px 30px rgba(9, 29, 28, .32)); }
+.christmas-door-scene { display: block; position: relative; width: 100%; height: 390px; perspective: 1000px; }
+.christmas-glow { position: absolute; inset: 8% 4% 0; border-radius: 50%; background: radial-gradient(ellipse, rgba(255, 223, 143, .5), transparent 68%); animation: door-glow 3.5s ease-in-out infinite; }
+.christmas-frame {
+  position: absolute; left: 20%; top: 3%; width: 64%; height: 87%;
+  border: 15px solid #e3d1a9; border-radius: 170px 170px 3px 3px;
+  background: #f8d993; box-shadow: 0 0 50px rgba(255, 222, 148, .28), inset 0 0 42px #efbd6a;
+}
+.christmas-frame::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, #ffdda0, #b96e37 65%, #482b26); opacity: .75; }
+.christmas-door-panel {
+  position: absolute; z-index: 2; inset: 0; display: block; transform-origin: left center;
+  border: 3px solid #e4c479; border-radius: 145px 145px 0 0;
+  background: linear-gradient(105deg, #a8393a, #7c282f 45%, #5b2029);
+  box-shadow: inset 0 0 28px rgba(44, 11, 17, .65);
+  transition: transform 1.15s cubic-bezier(.24,.7,.28,1), filter .35s ease;
+  transform-style: preserve-3d;
+}
+.christmas-door:hover .christmas-door-panel,
+.christmas-door:focus-visible .christmas-door-panel { filter: brightness(1.13); }
+.christmas-door.door-open .christmas-door-panel { transform: rotateY(-108deg); }
+.christmas-window {
+  position: absolute; top: 21%; left: 19%; width: 62%; height: 23%; border: 7px solid #d6b56d; border-radius: 4px;
+  background: linear-gradient(135deg, #ffe8a1, #f6b45e); box-shadow: 0 0 25px #ffc96e;
+}
+.window-cross::before, .window-cross::after { content: ""; position: absolute; background: #a97547; }
+.window-cross::before { top: 0; bottom: 0; left: 50%; width: 4px; }
+.window-cross::after { left: 0; right: 0; top: 50%; height: 4px; }
+.window-glow { position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.6), transparent 70%); }
+.christmas-wreath {
+  position: absolute; top: 48%; left: 34%; width: 32%; aspect-ratio: 1; border-radius: 50%;
+  border: 13px dotted #477343; box-shadow: inset 0 0 0 5px #668a48, 0 0 0 3px #c9a658;
+  background: radial-gradient(circle, transparent 43%, #385c38 45% 56%, transparent 59%);
+}
+.wreath-bow { position: absolute; top: -9px; left: 41%; width: 20px; height: 13px; border-radius: 50%; background: #cf6551; }
+.wreath-bow::before, .wreath-bow::after { content: ""; position: absolute; top: 7px; width: 13px; height: 18px; background: #ba4841; clip-path: polygon(0 0,100% 0,72% 100%,48% 67%,24% 100%); }
+.wreath-bow::before { left: -8px; transform: rotate(18deg); }
+.wreath-bow::after { right: -8px; transform: rotate(-18deg); }
+.wreath-berries { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 23% 35%, #d65443 0 4px, transparent 5px), radial-gradient(circle at 72% 28%, #d65443 0 4px, transparent 5px), radial-gradient(circle at 76% 72%, #d65443 0 4px, transparent 5px), radial-gradient(circle at 24% 70%, #d65443 0 4px, transparent 5px); }
+.christmas-plaque { position: absolute; top: 72%; left: 17%; width: 66%; padding: 8px 2px; border: 1px solid #d3b66e; background: #482b2c; color: #f5d997; font: 600 .64rem/1.3 Georgia,serif; letter-spacing: .16em; text-transform: uppercase; }
+.christmas-knob { position: absolute; top: 63%; right: 12%; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ffe6a0, #96632d 70%); box-shadow: 0 1px 6px #24130c; }
+.christmas-lights { position: absolute; z-index: 3; top: 5%; left: 22%; width: 58%; height: 28%; border-top: 3px solid #d3b56f; border-radius: 50% 50% 0 0; pointer-events: none; }
+.christmas-lights i { position: absolute; top: -3px; width: 9px; height: 13px; border-radius: 50%; background: #ffe48b; box-shadow: 0 0 12px 4px rgba(255, 226, 136, .68); animation: winter-twinkle 1.8s ease-in-out infinite; }
+.christmas-lights i:nth-child(1) { left: 3%; top: 15px; background:#fff0a1; }
+.christmas-lights i:nth-child(2) { left: 17%; top: -2px; animation-delay:.3s; background:#ec7770; }
+.christmas-lights i:nth-child(3) { left: 32%; top: -15px; animation-delay:.8s; }
+.christmas-lights i:nth-child(4) { left: 49%; top: -20px; animation-delay:1.2s; background:#e77a68; }
+.christmas-lights i:nth-child(5) { left: 66%; top: -13px; animation-delay:.5s; }
+.christmas-lights i:nth-child(6) { left: 81%; top: 0; animation-delay:1s; background:#e77a68; }
+.christmas-lights i:nth-child(7) { left: 95%; top: 17px; animation-delay:.6s; }
+.christmas-sparkle { position: absolute; z-index: 4; color: #fff2c0; font-size: 1.5rem; text-shadow: 0 0 13px #ffe28b; animation: winter-twinkle 2.2s ease-in-out infinite; }
+.sparkle-one { top: 15%; left: 7%; }
+.sparkle-two { top: 40%; right: 4%; animation-delay: .8s; }
+.sparkle-three { top: 68%; left: 4%; animation-delay: 1.4s; }
+.christmas-snow { position: absolute; z-index: 4; top: 20%; width: 5px; height: 5px; border-radius: 50%; background: #fff; box-shadow: 0 0 7px #fff; animation: snow-drift 4s ease-in-out infinite; }
+.snow-one { left: 14%; }.snow-two { right: 13%; top: 55%; animation-delay: 1.2s; }.snow-three { right: 22%; top: 10%; animation-delay: 2.1s; }
+@keyframes snow-drift { 0%,100% { transform: translateY(-6px); opacity:.55; } 50% { transform: translateY(20px); opacity:1; } }
+.christmas-doormat { position: absolute; left: 12%; bottom: 4%; width: 76%; padding: 8px; border-radius: 50%; background: #d6cfb6; color: #385448; font: .78rem system-ui,sans-serif; letter-spacing: .04em; box-shadow: 0 8px 14px rgba(0,0,0,.2); }
+.enter-label { display: block; margin: 12px 0 0; font: 700 .92rem system-ui,sans-serif; letter-spacing: .05em; }
+.entrance-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 24px; font: .9rem system-ui,sans-serif; }
+.entrance-controls button { padding: 9px 14px; border: 1px solid rgba(255,246,220,.6); border-radius: 999px; background: rgba(255,255,255,.09); color: #fff6dc; cursor: pointer; }
+.entrance-controls button:hover { background: rgba(255,255,255,.17); }
+.entrance-controls a { color: #fff6dc; text-underline-offset: 4px; }
+.entrance-note { color: #e7e2d1; font: .82rem/1.5 system-ui,sans-serif; opacity: .82; }
+#christmas-door:focus-visible, .entrance-controls button:focus-visible, #skip-christmas-door:focus-visible { outline: 3px solid #ffe38c; outline-offset: 5px; }
+@media (prefers-reduced-motion: reduce) {
+  .christmas-glow, .christmas-lights i, .christmas-sparkle, .christmas-snow { animation: none; }
+  .christmas-door-panel { transition: none; }
+}
+@media (max-width: 760px) {
+  .seasonal-hero { grid-template-columns: 1fr; gap: 30px; min-height: auto; padding: 54px 24px 42px; }
+  .christmas-entrance { width: min(100%, 360px); }
+  .christmas-door-scene { height: 350px; }
+  .entrance-controls { justify-content: center; }
+  .entrance-note { text-align: center; }
+}
