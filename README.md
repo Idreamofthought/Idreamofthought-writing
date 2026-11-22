@@ -1,11 +1,11 @@
 # I Dream of Thought Writing
 
-**A mythic strategy game of favour, catastrophe, and deep-time lore.**
+**The creative archive and website for I Dream of Thought, with the Breluce game and publishing systems.**
 
 [![CI](https://github.com/Idreamofthought/Idreamofthought-writing/actions/workflows/ci.yml/badge.svg)](https://github.com/Idreamofthought/Idreamofthought-writing/actions/workflows/ci.yml)
 [![Live site](https://img.shields.io/badge/live-idreamofthought.org-38556b)](https://www.idreamofthought.org/)
 
-![Breluce and I Dream of Thought](public/images/idream-of-thought-social-card.svg)
+![Breluce and I Dream of Thought](public/images/idream-of-thought-social-card.png)
 
 Breluce is a contemplative browser city-building game from Richard Jenkins and
 the I Dream of Thought creative universe. This repository contains its Express
@@ -39,7 +39,7 @@ people who inhabit it.
 
 - [I Dream of Thought](https://www.idreamofthought.org/) - the writing and creative archive
 - [Play Breluce](https://www.idreamofthought.org/game) - the browser edition is a one-time US$4.99 purchase
-- [About Breluce](https://www.idreamofthought.org/portus/) - read the premise and world overview
+- [About Breluce](https://breluce.idreamofthought.org/) - read the premise and world overview
 - [Writing archive](https://www.idreamofthought.org/writing/index.html) - poetry, fiction, philosophy, dreams, and ideas
 - [Breluce lore](lore/README.md) - worldbuilding, Codex, myths, events, and narrative sources
 - [Breluce documentation](docs/README.md) - systems, worldbuilding, artifacts, and developer guides
@@ -165,7 +165,7 @@ Start the server:
 npm start
 ```
 
-The server runs at `http://localhost:8080`. The game is available at `http://localhost:8080/portus/`.
+The server runs at `http://localhost:8080`. The game is available at `http://localhost:8080/game`. Legacy `/portus/...` bookmarks redirect to the standalone Breluce site.
 
 For local development, set `NODE_ENV=development` and use an HTTP `SITE_URL`, such as `http://localhost:8080`.
 
@@ -205,13 +205,13 @@ npm run validate:structure
 
 ## Deployment
 
-Breluce is deployed on Railway. The server exposes:
+The writing archive and account service are deployed on Railway. The standalone Breluce game has its own site at `https://breluce.idreamofthought.org/`. The server exposes:
 
 ```text
-/                    homepage
-/public              public assets
-/portus              game client, served from /public
-/protected/game      paid game mode
+/                    I Dream of Thought homepage
+/game                paid browser game
+/writing/            writing catalogue
+/health-and-screen-use wellbeing notice
 ```
 
 Railway checks the `/health` endpoint and runs one replica in the configured
@@ -222,11 +222,7 @@ are present in the service variables and that the `EMAIL_FROM` domain is
 verified in Resend. See the [Railway deployment checklist](docs/RAILWAY-DEPLOYMENT-CHECKLIST.md)
 for the complete release checks.
 
-The Breluce client is mounted with:
-
-```js
-app.use("/portus", express.static(path.join(__dirname, "public")));
-```
+The public browser game is served at `/game`; legacy bookmarks are redirected to the branded route.
 
 ## PayPal Webhook
 

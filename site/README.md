@@ -6,7 +6,7 @@ This directory is the canonical source/archive area for public writing and relat
 
 The Railway production project `game/` has a live service named `Idreamofthought writing`, with the custom domains `idreamofthought.org` and `www.idreamofthought.org`. Railway reported its latest deployment as `SUCCESS` on 2026-10-25.
 
-The site's server routes serve pages from `homepage/` (for example, `/tree/` is served from `homepage/tree/index.html`; the `/portus/` route is served from `homepage/portus/index.html`). The homepage in `homepage/index.html` is the I Dream of Thought site. This is the production-facing content tree.
+The site's server routes serve pages from `homepage/` (for example, `/tree/` is served from `homepage/tree/index.html`; the Breluce landing page is served from `homepage/portus/index.html`). The homepage in `homepage/index.html` is the I Dream of Thought site. This is the production-facing content tree.
 
 ## Publishing a new piece
 

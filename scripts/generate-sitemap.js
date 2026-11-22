@@ -15,7 +15,6 @@ const canonicalPaths = new Map([
   ["/fragments.html", "/fragments"],
   ["/lore/index.html", "/lore/"],
   ["/press-kit.html", "/press-kit"],
-  ["/portus/index.html", "/portus/"],
   ["/start-here.html", "/start-here"],
   ["/writing/index.html", "/writing/"],
   ["/codex/index.html", "/codex/"]
@@ -46,7 +45,7 @@ function xml(urls) {
 const staticUrls = walk(homepageDirectory)
   .filter((filePath) => filePath.endsWith(".html"))
   .map(toUrl)
-  .filter((url) => url && !url.startsWith("/tree/leaves/"));
+  .filter((url) => url && !url.startsWith("/tree/leaves/") && !url.startsWith("/portus/"));
 
 const leafUrls = TREE_LEAVES.map(
   (leaf) => `/tree/leaves/${leaf.branch}/${encodeURIComponent(leaf.slug)}.html`
@@ -57,6 +56,7 @@ const leafIndexes = Object.keys(TREE_BRANCHES).map(
 const urls = [...new Set([
   ...staticUrls,
   "/tree/",
+  "/health-and-screen-use",
   "/tree/leaves/health/the-borrowed-kidney.html",
   ...leafIndexes,
   ...leafUrls
@@ -66,7 +66,7 @@ const groups = {
   main: urls.filter((url) => !url.startsWith("/tree/") && !url.startsWith("/codex/") && !url.startsWith("/writing/")),
   territories: urls.filter((url) => url.startsWith("/tree/branches/")),
   writing: urls.filter((url) => url.startsWith("/writing/") || url.startsWith("/tree/leaves/")),
-  portus: urls.filter((url) => url.startsWith("/codex/") || url.startsWith("/lore/") || url.startsWith("/portus/"))
+  lore: urls.filter((url) => url.startsWith("/codex/") || url.startsWith("/lore/"))
 };
 
 for (const [name, sitemapUrls] of Object.entries(groups)) {
