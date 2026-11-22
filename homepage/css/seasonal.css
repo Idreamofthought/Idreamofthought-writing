@@ -127,3 +127,59 @@
   .seasonal-grid { grid-template-columns: 1fr; }
   .seasonal-teaser { grid-template-columns: 1fr; margin: 24px; }
 }
+
+/* A welcoming Christmas doorway for the winter collection. */
+.seasonal-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(260px, .8fr);
+  align-items: center;
+  gap: clamp(32px, 6vw, 88px);
+  min-height: 72vh;
+  overflow: hidden;
+  padding: clamp(58px, 8vw, 112px) clamp(24px, 8vw, 120px);
+  background:
+    radial-gradient(circle at 82% 14%, rgba(255, 230, 164, .22), transparent 8rem),
+    radial-gradient(circle at 14% 20%, rgba(255,255,255,.16) 0 1px, transparent 2px),
+    radial-gradient(circle at 33% 73%, rgba(255,255,255,.2) 0 1px, transparent 2px),
+    radial-gradient(circle at 91% 79%, rgba(255,255,255,.18) 0 1px, transparent 2px),
+    linear-gradient(145deg, #173b3a 0%, #28635b 56%, #799387 100%);
+}
+.seasonal-hero::before,
+.seasonal-hero::after {
+  position: absolute;
+  z-index: 0;
+  color: #fff5cf;
+  content: "✦";
+  animation: winter-twinkle 3.2s ease-in-out infinite;
+  text-shadow: 0 0 10px rgba(255, 236, 164, .9), 0 0 24px rgba(255, 228, 132, .72);
+}
+.seasonal-hero::before { top: 14%; right: 13%; font-size: 1.2rem; }
+.seasonal-hero::after { top: 29%; right: 43%; font-size: .8rem; animation-delay: 1.4s; }
+.seasonal-hero-copy, .christmas-door { position: relative; z-index: 1; }
+.seasonal-hero-copy { max-width: 700px; }
+.christmas-door {
+  width: min(100%, 430px);
+  justify-self: center;
+  filter: drop-shadow(0 24px 36px rgba(9, 29, 28, .3));
+}
+.christmas-door svg { display: block; width: 100%; height: auto; overflow: visible; }
+.door-light { animation: door-glow 3.4s ease-in-out infinite; }
+.door-star { transform-box: fill-box; transform-origin: center; animation: winter-twinkle 2.6s ease-in-out infinite; }
+.door-star:nth-of-type(2) { animation-delay: 1.1s; }
+@keyframes winter-twinkle {
+  0%, 100% { opacity: .5; transform: scale(.86); }
+  50% { opacity: 1; transform: scale(1.16); }
+}
+@keyframes door-glow {
+  0%, 100% { opacity: .48; }
+  50% { opacity: .86; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .seasonal-hero::before, .seasonal-hero::after, .door-light, .door-star { animation: none; }
+}
+@media (max-width: 760px) {
+  .seasonal-hero { grid-template-columns: 1fr; gap: 42px; min-height: auto; padding: 64px 24px 48px; }
+  .christmas-door { width: min(78vw, 340px); }
+  .seasonal-hero h1 { font-size: clamp(3rem, 14vw, 5rem); }
+}
